@@ -8,8 +8,7 @@
 - Downloading of a part of a playlist for newly added songs
 - Format the songs in the playlist to a text file
 
-**Plans:**
-- Syncing songs that have been removed from the playlist
+**This project future plans/updates can be seen at the ['Plans' Project](https://github.com/pepershukov/ytm-yl-downloader/projects/1).**
 
 ## Requirements
 
