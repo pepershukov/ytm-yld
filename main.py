@@ -17,25 +17,25 @@ import codecs
 
 
 # Handlers
-log_count = 1  # counter of log/error attempts
-
 def logwrite(string):
     print ('[LOG] {}'.format(string))  # prints LOG stdout
     with open('{}/log.txt'.format(path_main), 'a') as file:
-        file.write('[#{}] [LOG] [{}] {}\n'.format(log_count,
-                   datetime.datetime.now(), string))  # writes stdout to file as LOG
-    log_count += 1
+        file.write('[[LOG] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as LOG
 
 def exit_on_error(string):
     print ('[ERROR] {} Exiting...'.format(string))  # prints ERROR stdout
     with open('{}/log.txt'.format(path_main), 'a') as file:
-        file.write('[#{}] [ERROR] [{}] {}\n'.format(log_count,
-                   datetime.datetime.now(), string))  # writes stdout to file as ERROR
-    log_count += 1
+        file.write('[ERROR] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as ERROR
     sys.exit()  # exits app
 
 
 # Paths
+path_song = '{}/Music'.format(os.path.expanduser('~'))
+path_temp = '{}/Music/temp'.format(os.path.expanduser('~'))
+path_json = \
+    '{}/metadata.json'.format(os.path.abspath(os.path.dirname(__file__)))
+path_main = os.path.abspath(os.path.dirname(__file__))
+
 try:
     path_ffmpeg = sys.argv[2]  # gets FFmpeg path from arguments
 except IndexError:
@@ -52,19 +52,14 @@ except IndexError:
 
 if os.path.isfile(path_cookie):  # checks if cookie file is existing
     with open(path_cookie, 'r') as file:
-        if not '# Netscape HTTP Cookie File' in file.readlines()[0] \
-            or '# HTTP Cookie File' in file.readlines()[0]:  # checks for vaild formatting of a cookie file as depicted by yt-dlp
+        data = file.readlines()[0]
+        if not '# Netscape HTTP Cookie File' in data \
+            or '# HTTP Cookie File' in data:  # checks for vaild formatting of a cookie file as depicted by yt-dlp
             exit_on_error('Invalid formatting of a YouTube.com cookie file. Look into \'README.md\' under \'Requirements\' for instructions.'
                           )
 else:
     exit_on_error('Invalid or non-existant YouTube.com cookie file path.'
                   )
-
-path_song = '{}/Music'.format(os.path.expanduser('~'))
-path_temp = '{}/Music/temp'.format(os.path.expanduser('~'))
-path_json = \
-    '{}/metadata.json'.format(os.path.abspath(os.path.dirname(__file__)))
-path_main = os.path.abspath(os.path.dirname(__file__))
 
 
 # Main programm
