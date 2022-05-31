@@ -1,7 +1,7 @@
 # **YouTube Music - 'Your Likes' Downloader**
-## A downloader of a playlist for autonomous listening to your favourite songs
+## A downloader of your all-time favourite playlist for autonomous listening
 
-***YouTube Music - 'Your Likes' Downloader*** or else ***ytm-yl-downloader***, is a command-line/terminal utility used to either download or parse your favourite songs from YouTube. *Therefore, because it is a command-line utility, there is **no graphical user interface.***
+***YouTube Music - 'Your Likes' Downloader*** or else ***ytm-yl-downloader***, is a **command-line/terminal utility** used to either download or parse your favourite songs from YouTube. *Therefore, because it is a command-line utility, there is **no graphical user interface.***
 
 **Features:**
 - Downloading of a whole playlist
@@ -12,25 +12,31 @@
 
 ## Requirements
 
-- **YouTube.com cookie as a "Netscape HTTP Cookie File"**
+- ***YouTube.com* cookie as a "Netscape HTTP Cookie File"**
   >In order to extract cookies from browser use any conforming browser extension for exporting cookies. For example, [Get cookies.txt](https://chrome.google.com/webstore/detail/get-cookiestxt/bgaddhkoddajcdgocldbbfleckgcbcid/) (for Chrome) or [cookies.txt](https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/) (for Firefox).  
-  > Note that the cookies file must be in Mozilla/Netscape format and the first line of the cookies file must be either `# HTTP Cookie File` or `# Netscape HTTP Cookie File`. Make sure you have correct [newline format](https://en.wikipedia.org/wiki/Newline) in the cookies file and convert newlines if necessary to correspond with your OS, namely `CRLF` (`\r\n`) for Windows and `LF` (`\n`) for Unix and Unix-like systems (Linux, macOS, etc.).
+  >Note that the cookies file must be in Mozilla/Netscape format and the first line of the cookies file must be either `# HTTP Cookie File` or `# Netscape HTTP Cookie File`. Make sure you have correct [newline format](https://en.wikipedia.org/wiki/Newline) in the cookies file and convert newlines if necessary to correspond with your OS, namely `CRLF` (`\r\n`) for Windows and `LF` (`\n`) for Unix and Unix-like systems (Linux, macOS, etc.).
   - *This application does not store/send the cookies for the use outside of this application.*
-- **FFmpeg installed**
+- ***FFmpeg* installed**
+  - _(Update: [#1.1.0](https://github.com/pepershukov/ytm-yl-downloader/releases/tag/v1.1.0))_ _**Only necessary if you are to download music from YouTube. If you want to simply parse the playlist into a text output, FFmpeg is not required.**_
   - The latest *FFmpeg* package for installation can be found [here](https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z).
 
 ## Usage
 
+_(Update: [#1.1.0](https://github.com/pepershukov/ytm-yl-downloader/releases/tag/v1.1.0))_ - Reordered terms
 ```
-ytm-yl-downloader.exe [ffmpeg] [cookie]  
-  
+ytm-yl-downloader.exe [cookie] <ffmpeg> 
+
+[...] - required arguments
+<...> - optional arguments
+Further information on requirements can be found in the README.md.
+
 Arguments:
-    ffmpeg      the absolute path to folder of the binaries of FFmpeg installation (by default, installed in 'C:/Program Files/ffmpeg/bin' in Windows)
     cookie      the absolute path to file of a YouTube.com cookie as a "Netscape HTTP Cookie File"
+    ffmpeg      the absolute path to folder of the binaries of FFmpeg
 ```
 *If you choose not to pass the arguments, you will have to enter the paths upon the application input request.*
 
-If the paths turn out to be wrong/misspelt, `yt-dlp` (`youtube-dl`) will throw out an error.
+_(Update: [#1.1.0](https://github.com/pepershukov/ytm-yl-downloader/releases/tag/v1.1.0))_ If the paths turn out to be invalid or non-existant, the application will throw out an error.
 
 ## Quickstart
 
