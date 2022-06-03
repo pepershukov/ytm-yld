@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
 # Usage: python <path to script> [YouTube cookie] [ffmpeg/bin folder]
 # Requirements:
 # 1. ffmpeg: https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z
@@ -22,18 +23,20 @@ def logwrite(string):
     with open('{}/log.txt'.format(path_main), 'a') as file:
         file.write('[[LOG] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as LOG
 
-def exit_on_error(string):
-    print ('[ERROR] {} Exiting...'.format(string))  # prints ERROR stdout
+def exit_on_error(string, exit = 0):
     with open('{}/log.txt'.format(path_main), 'a') as file:
         file.write('[ERROR] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as ERROR
-    sys.exit()  # exits app
+    if not exit:
+        print ('[ERROR] {} Exiting...'.format(string))  # prints ERROR stdout
+        sys.exit() # exits app
+    else:
+        print ('[ERROR] {} Continuing...'.format(string))  # prints ERROR stdout
 
 
 # Paths
-path_song = '{}/Music'.format(os.path.expanduser('~'))
-path_temp = '{}/Music/temp'.format(os.path.expanduser('~'))
-path_json = \
-    '{}/metadata.json'.format(os.path.abspath(os.path.dirname(__file__)))
+path_song = '{}/Music/ytm-yl-downloader'.format(os.path.expanduser('~'))
+path_temp = '{}/Music/ytm-yl-downloader/temp'.format(os.path.expanduser('~'))
+path_json = '{}/metadata.json'.format(os.path.abspath(os.path.dirname(__file__)))
 path_main = os.path.abspath(os.path.dirname(__file__))
 
 try:
@@ -46,9 +49,7 @@ try:
 except IndexError:
     path_cookie = \
         input('[INPUT] Enter the absolute path to YouTube.com "Netscape HTTP Cookie File": '
-              )
-
-                # if not passed, ask the user for one
+              ) # if not passed, ask the user for one
 
 if os.path.isfile(path_cookie):  # checks if cookie file is existing
     with open(path_cookie, 'r') as file:
@@ -70,13 +71,13 @@ if __name__ == '__main__':
     except FileNotFoundError:
         pass
 
-    mode = input('[INPUT] playlist-to-text/donwload/both? (t/d/b): ')
+    mode = input('[INPUT] playlist-to-text/donwload/sync? ([t|d|s]): ')
 
+    logwrite("Changing current working directory to '{}'...".format(path_main))
     os.chdir(path_main)
     logwrite('Downloading a JSON metadata playlist file...')
 
     # os.system('cd "{}" & yt-dlp --cookies="{}" -i -J -- https://music.youtube.com/playlist?list=LM > metadata.json'.format(path_main, path_cookie))
-
     with yt_dlp.YoutubeDL({
         'cookiefile': path_cookie,
         'no_warnings': True,
@@ -98,25 +99,22 @@ except:
         json_data = json.load(file)
 
 if __name__ == '__main__':
-    if mode == 't':
-        logwrite('Parse only mode chosen.')
+    if 't' in mode:
         import playlist_to_text
-    elif mode == 'd':
-        logwrite('Download only mode chosen.')
-        import playlist_downloader
-    elif mode == 'b':
-        logwrite('Parse & Download mode chosen.')
-        import playlist_to_text
+    if 's' in mode:
+        import playlist_sync
+    if 'd' in mode:
         import playlist_downloader
 
     logwrite('Removing "{}"...'.format(path_json))
     os.remove(path_json)
 
     logwrite('Execution finished.')
-    if mode == 't':
-        logwrite('You can find your parsed songs at "{}/songs_info.txt".'.format(path_main))
-    elif mode == 'd':
-        logwrite('You can find your downloaded songs at "{}".'.format(path_song))
-    elif mode == 'b':
-        logwrite('You can find your parsed songs at "{}/songs_info.txt".'.format(path_main))
-        logwrite('You can find your downloaded songs at "{}".'.format(path_song))
+    logwrite("The log file is at '{}/log.txt'.".format(path_main))
+
+    if 't' in mode:
+        logwrite("Your parsed playlist information is available in '{}/songs_info.txt'.".format(path_main))
+    if 's' in mode:
+        logwrite("Your songs have been synchronised in '{}'.".format(path_song))
+    if 'd' in mode:
+        logwrite("Your downloaded songs are available in '{}'.".format(path_song))
