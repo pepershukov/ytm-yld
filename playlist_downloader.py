@@ -24,7 +24,7 @@ else:
               ) # ask the user for FFmpeg binaries if they are not found
     if not (os.path.isdir(path_ffmpeg) and 'ffmpeg.exe'
             in os.listdir(path_ffmpeg)):  # checks for FFmpeg binaries validity given by the user
-        main.exit_on_error("'ffmpeg/bin' folder is invalid, non-existing or does not contain binaries of ffmpeg."
+        main.errorwrite("'ffmpeg/bin' folder is invalid, non-existing or does not contain binaries of ffmpeg."
                            ) # if not valid, exit the application (can't continue)
 
 # cleaning the temporary files if present
@@ -36,8 +36,8 @@ try:
     main.logwrite('Removing "{}"...'.format(main.path_temp))
     os.rmdir(main.path_temp)
 except:
-    main.logwrite("Couldn't remove the temporary directory. Continuing..."
-                  )
+    main.errorwrite("Couldn't remove the temporary directory. Continuing...", 1
+                    )
 main.logwrite('Making "{}"...'.format(main.path_temp))
 os.makedirs(main.path_temp, exist_ok=True)
 
@@ -167,7 +167,7 @@ else: # if some songs are present, udgrade to find more
         os.rmdir(main.path_temp)
         main.logwrite('Removing "{}"...'.format(main.path_json))
         os.remove(main.path_json)
-        main.logwrite('No songs to download.', 1)
+        main.errorwrite('No songs to download.', 1)
     else:
         main.logwrite('Downloading {} songs...'.format(max_song_num))
         # os.system(yt-dlp --cookies="{}" --playlist-end={} --write-thumbnail -x --audio-format=mp3 --audio-quality=0 --ffmpeg-location="{}" --output="%(id)s.mp3" -- https://music.youtube.com/playlist?list=LM'.format(main.path_temp, main.path_cookie, max_song_num, path_ffmpeg))

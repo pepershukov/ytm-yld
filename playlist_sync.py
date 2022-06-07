@@ -51,4 +51,4 @@ for full_mp3_file in glob.glob('{}/*.mp3'.format(main.path_song)):  # parse thro
         main.logwrite("Match not found. Deleting '{}'...".format(full_mp3_file))
         os.remove(full_mp3_file)
 else:
-    main.logwrite('Nothing to sync - no files. Continuing...')
+    main.errorwrite('Nothing to sync - no files.', 1)

@@ -23,7 +23,7 @@ def logwrite(string):
     with open('{}/log.txt'.format(path_main), 'a') as file:
         file.write('[[LOG] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as LOG
 
-def exit_on_error(string, exit = 0):
+def errorwrite(string, exit = 0):
     with open('{}/log.txt'.format(path_main), 'a') as file:
         file.write('[ERROR] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as ERROR
     if not exit:
@@ -56,10 +56,10 @@ if os.path.isfile(path_cookie):  # checks if cookie file is existing
         data = file.readlines()[0]
         if not '# Netscape HTTP Cookie File' in data \
             or '# HTTP Cookie File' in data:  # checks for vaild formatting of a cookie file as depicted by yt-dlp
-            exit_on_error('Invalid formatting of a YouTube.com cookie file. Look into \'README.md\' under \'Requirements\' for instructions.'
+            errorwrite('Invalid formatting of a YouTube.com cookie file. Look into \'README.md\' under \'Requirements\' for instructions.'
                           )
 else:
-    exit_on_error('Invalid or non-existant YouTube.com cookie file path.'
+    errorwrite('Invalid or non-existant YouTube.com cookie file path.'
                   )
 
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
         logwrite('Removing a log file...')
         os.remove('{}/log.txt'.format(path_main))
     except FileNotFoundError:
-        pass
+        errorwrite('Couldn\'t remove the log file.', 1)
 
     mode = input('[INPUT] playlist-to-text/donwload/sync? ([t|d|s]): ')
 
@@ -101,20 +101,25 @@ except:
 if __name__ == '__main__':
     if 't' in mode:
         import playlist_to_text
-    if 's' in mode:
-        import playlist_sync
-    if 'd' in mode:
-        import playlist_downloader
+    if json_data['entries']: # check if there are liked songs
+        if 's' in mode:
+            import playlist_sync
+        if 'd' in mode:
+            import playlist_downloader
+    else:
+        errorwrite("No songs to sync/download.", 1)
 
     logwrite('Removing "{}"...'.format(path_json))
     os.remove(path_json)
 
+    logwrite('================================================================================')
     logwrite('Execution finished.')
     logwrite("The log file is at '{}/log.txt'.".format(path_main))
 
     if 't' in mode:
         logwrite("Your parsed playlist information is available in '{}/songs_info.txt'.".format(path_main))
-    if 's' in mode:
-        logwrite("Your songs have been synchronised in '{}'.".format(path_song))
-    if 'd' in mode:
-        logwrite("Your downloaded songs are available in '{}'.".format(path_song))
+    if json_data['entries']: # check if there are liked songs
+        if 's' in mode:
+            logwrite("Your songs have been synchronised in '{}'.".format(path_song))
+        if 'd' in mode:
+            logwrite("Your downloaded songs are available in '{}'.".format(path_song))
