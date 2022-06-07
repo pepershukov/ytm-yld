@@ -135,6 +135,8 @@ if not glob.glob('{}/*.mp3'.format(main.path_song)):  # if no songs are present 
                            'preferredcodec': 'mp3'}],
         }) as ydl:
         ydl.download('https://music.youtube.com/playlist?list=LM')  # downloading handler
+    after_download()
+
 else: # if some songs are present, udgrade to find more
     # find how many songs needed to download more...
     for (max_song_num, full_mp3_file) in \
@@ -181,7 +183,6 @@ else: # if some songs are present, udgrade to find more
                                'preferredcodec': 'mp3'}],
             }) as ydl:
             ydl.download('https://music.youtube.com/playlist?list=LM')  # download handler
-        
         after_download()
 
 # Old download system (through input)
