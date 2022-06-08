@@ -16,6 +16,29 @@ import yt_dlp
 import json
 import codecs
 
+if '--help' in sys.argv: # print help message and exit
+    print("""ytm-yl-downloader.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...)
+
+[...] - required arguments
+(...) - optional arguments
+Further information on requirements can be found in the README.md.
+https://github.com/pepershukov/ytm-yl-downloader#readme
+
+If the following arguments are not passed, the application will request them when necessary.
+And if they fail to validate within the app, the application will throw an error.
+Arguments:
+    --help          • shows this message and exits
+
+    --cookie        • the absolute path to file of a YouTube.com cookie as a "Netscape HTTP Cookie File"
+
+    --ffmpeg        • the absolute path to folder of the binaries of FFmpeg
+                    • only necessary if you are to select 'd' mode
+    
+    --output        • the absolute path to folder where you want your music downloaded
+                    • only necessary if you are to select 'd' mode
+    
+    --mode          • mode (t|d|s|j) to request for the application to complete""")
+    sys.exit()
 
 # Handlers
 def logwrite(string):
@@ -34,33 +57,38 @@ def errorwrite(string, exit = 0):
 
 
 # Paths
-path_song = '{}/Music/ytm-yl-downloader'.format(os.path.expanduser('~'))
-path_temp = '{}/Music/ytm-yl-downloader/temp'.format(os.path.expanduser('~'))
 path_json = '{}/metadata.json'.format(os.path.abspath(os.path.dirname(__file__)))
 path_main = os.path.abspath(os.path.dirname(__file__))
 
-try:
-    path_ffmpeg = sys.argv[2]  # gets FFmpeg path from arguments
-except IndexError:
-    pass  # if not passed, handle an error
+if '--output' in sys.argv: # if output folder passed in arguments
+    # apply the output path passed in arguments to global variables
+    path_song = sys.argv[sys.argv.index('--output') + 1]
+    path_temp = '{}/temp'.format(path_song)
+else:
+    # otherwise, apply default paths
+    path_song = '{}/Music/ytm-yl-downloader'.format(os.path.expanduser('~'))
+    path_temp = '{}/Music/ytm-yl-downloader/temp'.format(os.path.expanduser('~'))
 
-try:
-    path_cookie = sys.argv[1]  # gets YouTube.com cookie path from arguments
-except IndexError:
-    path_cookie = \
-        input('[INPUT] Enter the absolute path to YouTube.com "Netscape HTTP Cookie File": '
-              ) # if not passed, ask the user for one
+if '--ffmpeg' in sys.argv: # if FFmpeg folder passed in arguments
+    path_ffmpeg = sys.argv[sys.argv.index('--ffmpeg') + 1]
+else:
+    errorwrite('FFmpeg path not passed in args.', 1)  # if not passed, handle an error
 
+if '--cookie' in sys.argv:
+    path_cookie = sys.argv[sys.argv.index('--cookie') + 1]  # gets YouTube.com cookie path from arguments
+else:
+    path_cookie = input('[INPUT] Enter the absolute path to YouTube.com "Netscape HTTP Cookie File": '
+                        ) # if not passed, ask the user for one
 if os.path.isfile(path_cookie):  # checks if cookie file is existing
     with open(path_cookie, 'r') as file:
         data = file.readlines()[0]
         if not '# Netscape HTTP Cookie File' in data \
             or '# HTTP Cookie File' in data:  # checks for vaild formatting of a cookie file as depicted by yt-dlp
             errorwrite('Invalid formatting of a YouTube.com cookie file. Look into \'README.md\' under \'Requirements\' for instructions.'
-                          )
+                       )
 else:
     errorwrite('Invalid or non-existant YouTube.com cookie file path.'
-                  )
+               )
 
 
 # Main programm
@@ -71,7 +99,10 @@ if __name__ == '__main__':
     except FileNotFoundError:
         errorwrite('Couldn\'t remove the log file.', 1)
 
-    mode = input('[INPUT] playlist-to-text/donwload/sync? ([t|d|s]): ')
+    if '--mode' in sys.argv:
+        mode = sys.argv[sys.argv.index('--mode') + 1]
+    else:
+        mode = input('[INPUT] playlist-to-text/donwload/sync? ([t|d|s]): ')
 
     logwrite("Changing current working directory to '{}'...".format(path_main))
     os.chdir(path_main)
@@ -109,13 +140,16 @@ if __name__ == '__main__':
     else:
         errorwrite("No songs to sync/download.", 1)
 
-    logwrite('Removing "{}"...'.format(path_json))
-    os.remove(path_json)
+    if 'j' not in mode:
+        logwrite('Removing "{}"...'.format(path_json))
+        os.remove(path_json)
 
     logwrite('================================================================================')
     logwrite('Execution finished.')
     logwrite("The log file is at '{}/log.txt'.".format(path_main))
 
+    if 'j' in mode:
+        logwrite("Your playlist metadata as a JSON formatted file is available in '{}'.".format(path_json))
     if 't' in mode:
         logwrite("Your parsed playlist information is available in '{}/songs_info.txt'.".format(path_main))
     if json_data['entries']: # check if there are liked songs

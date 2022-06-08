@@ -7,13 +7,14 @@
 - Downloading of a whole playlist
 - Downloading of a part of a playlist for newly added songs
 - Deleting songs that have been removed from the playlist
+- Downloading playlist metadata as a JSON formatted file
 - Format the songs in the playlist to a text file
 
 **This project future plans/updates can be seen at the ['Plans' Project](https://github.com/pepershukov/ytm-yl-downloader/projects/1).**  
 
 Instructions per version may differ, so **if you are looking for instructions on previous versions, look into a specific version tag accordingly.**
 
-The latest release of this application can be found [here](https://github.com/pepershukov/ytm-yl-downloader/releases/latest).
+The latest patch notes of this application can be found [here](https://github.com/pepershukov/ytm-yl-downloader/releases/latest) and the latest version of the application to download can be found [here](https://github.com/pepershukov/ytm-yl-downloader/releases/latest/download/ytm-yl-downloader.exe).
 
 ## Requirements
 
@@ -27,17 +28,25 @@ The latest release of this application can be found [here](https://github.com/pe
 
 ## Usage
 
-_(Update: [#1.1.0+](https://github.com/pepershukov/ytm-yl-downloader/releases/tag/v1.1.0))_ - Reordered terms
+_(Update: [#3.0.0+](https://github.com/pepershukov/ytm-yl-downloader/releases/tag/v3.0.0))_ - Revamped arguments
 ```
-ytm-yl-downloader.exe [cookie] <ffmpeg> 
+ytm-yl-downloader.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...)
 
 [...] - required arguments
-<...> - optional arguments
-Further information on requirements can be found in the README.md.
+(...) - optional arguments
 
 Arguments:
-    cookie      the absolute path to file of a YouTube.com cookie as a "Netscape HTTP Cookie File"
-    ffmpeg      the absolute path to folder of the binaries of FFmpeg
+    --help          • shows this message and exits
+
+    --cookie        • the absolute path to file of a YouTube.com cookie as a "Netscape HTTP Cookie File"
+
+    --ffmpeg        • the absolute path to folder of the binaries of FFmpeg
+                    • only necessary if you are to select 'd' mode
+    
+    --output        • the absolute path to folder where you want your music downloaded
+                    • only necessary if you are to select 'd' mode
+    
+    --mode          • mode (t|d|s|j) to request for the application to complete
 ```
 *If you choose not to pass the arguments, you will have to enter the paths upon the application input request.*
 
@@ -48,10 +57,12 @@ _(Update: [#1.1.0+](https://github.com/pepershukov/ytm-yl-downloader/releases/ta
 You will be asked upon starting the application to select the mode of your choice.  
 _(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yl-downloader/releases/tag/v2.0.0))_ As there is **no 'all' mode**, you can **stack the modes together** with an input request; for example, if I would want to go through all the modes, I will write `tds` _(order of items does not matter)_ as the mode of my choice. Similarly, if I would want two specific modes - download & sync - I will write `ds` _(again, order of items does not matter)_; and so on.
 
-**There are currently three modes:**
+**There are currently four modes:**
 - **Playlist-to-text only (`t`)**
   - Saves the songs' information to a text file as a table
 - **Download only (`d`)**
   - Downloads the songs that the application finds not existing locally
 - **Sync only (`s`)** _(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yl-downloader/releases/tag/v2.0.0))_
   - Deletes songs stored locally that have been removed from the playlist
+- **JSON only (`j`)** _(Update: [#3.0.0+](https://github.com/pepershukov/ytm-yl-downloader/releases/tag/v3.0.0))_
+  - Does not delete the JSON metadata of the playlist - mainly for advanced users to play around with it

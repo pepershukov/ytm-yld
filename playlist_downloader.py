@@ -15,17 +15,19 @@ import itertools
 
 
 # Preparing for download
+# checking for FFmpeg validity
 if os.path.isdir(main.path_ffmpeg) and 'ffmpeg.exe' \
     in os.listdir(main.path_ffmpeg):  # checks for FFmpeg binaries existence passed from arguments
     path_ffmpeg = main.path_ffmpeg  # if valid, assign it to path_ffmpeg
 else:
-    path_ffmpeg = \
-        input('[INPUT] Enter the absolute path to \'ffmpeg/bin\' folder: '
-              ) # ask the user for FFmpeg binaries if they are not found
+    main.errorwrite("'ffmpeg/bin' folder is invalid, non-existing or does not contain binaries of ffmpeg.", 1
+                    ) # if not valid, continue for the user to corret the mistake
+    path_ffmpeg = input('[INPUT] Enter the absolute path to \'ffmpeg/bin\' folder: '
+                        ) # ask the user for FFmpeg binaries if they are not found
     if not (os.path.isdir(path_ffmpeg) and 'ffmpeg.exe'
             in os.listdir(path_ffmpeg)):  # checks for FFmpeg binaries validity given by the user
         main.errorwrite("'ffmpeg/bin' folder is invalid, non-existing or does not contain binaries of ffmpeg."
-                           ) # if not valid, exit the application (can't continue)
+                        ) # if not valid after both tries, exit the application (can't continue)
 
 # cleaning the temporary files if present
 try:
@@ -99,9 +101,21 @@ def after_download():
 
                 main.logwrite('Moving #{} ({}) song to "{}"...'.format(counter,
                             remote_song['title'], main.path_song))
-                os.rename(full_mp3_file, '{}/{}.mp3'.format(main.path_song,
+                try:
+                    os.rename(full_mp3_file, '{}/{}.mp3'.format(main.path_song,
                         remote_song['title']))
-
+                except OSError: # if there are unallowed characters in the name
+                    remove_char = '\\/:"?*<>|'
+                    title_list = list(remote_song['title'])
+                    for title_index, char in itertools.product(range(len(title_list)), remove_char):
+                        if title_list[title_index] == char:
+                            title_list[title_index] = '-'
+                    new_title = ''
+                    for char in title_list:
+                        new_title += char
+                    os.rename(full_mp3_file, '{}/{}.mp3'.format(main.path_song,
+                        new_title))
+                
                 main.logwrite('Converted song #{}/{}.'.format(counter,
                             max_song_num))
                 counter += 1
