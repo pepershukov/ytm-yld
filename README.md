@@ -9,7 +9,7 @@
 - Deleting songs that have been removed from the playlist
 - Downloading playlist metadata as a JSON formatted file
 - Format the songs in the playlist to a text file
-- Downloading only the songs 
+- Downloading only the songs that you want
 
 **This project future plans/updates can be seen at the ['Plans' Project](https://github.com/pepershukov/ytm-yld/projects/1).**  
 
