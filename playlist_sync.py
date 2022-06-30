@@ -11,42 +11,31 @@ import mutagen.easyid3  # working with audio metadata
 
 # Core
 for full_mp3_file in glob.glob('{}/*.mp3'.format(main.path_song)):  # parse through mp3 files
-    for song_info in main.json_data['entries']:  # parse through playlist metadata
-        if song_info:  # checks for song vaildation on YouTube
+    for remote_song in main.json_data['entries']:  # parse through playlist metadata
+        if remote_song:  # checks for song vaildation on YouTube
             main.logwrite("Checking '{}' with '{}'...".format(full_mp3_file,
-                            song_info['title']))
+                            remote_song['title']))
             local_song = mutagen.easyid3.EasyID3(full_mp3_file)  # open mp3 file
 
+            # gather local song metadata
+            local_song_data = [local_song['title']]
+            if 'artist' in local_song.keys():
+                local_song_data.append(local_song['artist'])
+            if 'album' in local_song.keys():
+                local_song_data.append(local_song['album'])
+            
+            # gather remote song metadata
+            remote_song_data = [remote_song['title']]
+            if remote_song['artist']:
+                remote_song_data.append(remote_song['artist'])
+            if remote_song['album']:
+                remote_song_data.append(remote_song['album'])
+
             # compare the data...
-            if not 'artist' in local_song.keys() and not 'album' \
-                in local_song.keys():
-                if local_song['title'][0] == song_info['title']:
-                    main.logwrite('Match found between "{}" and "{}". Continuing...'.format(local_song['title'
-                            ][0], song_info['title']))
-                    break
-            elif not 'artist' in local_song.keys() and 'album' \
-                in local_song.keys():
-                if local_song['title'][0] == song_info['title'] \
-                    and local_song['album'][0] == song_info['album']:
-                    main.logwrite('Match found between "{}" and "{}". Continuing...'.format(local_song['title'
-                            ][0], song_info['title']))
-                    break
-            elif 'artist' in local_song.keys() and not 'album' \
-                in local_song.keys():
-                if local_song['title'][0] == song_info['title'] \
-                    and not local_song['artist'] \
-                    == local_song['author'] == song_info['creator'].split(', '):
-                    main.logwrite('Match found between "{}" and "{}". Continuing...'.format(local_song['title'
-                            ][0], song_info['title']))
-                    break
-            else:
-                if local_song['title'][0] == song_info['title'] \
-                    and local_song['artist'] == local_song['author'
-                        ] == song_info['creator'].split(', ') \
-                    and local_song['album'][0] == song_info['album']:
-                    main.logwrite('Match found between "{}" and "{}". Continuing...'.format(local_song['title'
-                            ][0], song_info['title']))
-                    break
+            if local_song_data == remote_song_data:
+                main.logwrite('Match found between "{}" and "{}". Continuing...'.format(local_song['title'
+                                ][0], remote_song['title']))
+                break
     else:
         main.logwrite("Match not found. Deleting '{}'...".format(full_mp3_file))
         os.remove(full_mp3_file)

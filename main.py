@@ -2,12 +2,6 @@
 # -*- coding: utf-8 -*-
 
 
-# Usage: python <path to script> [YouTube cookie] [ffmpeg/bin folder]
-# Requirements:
-# 1. ffmpeg: https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z
-# 2. YouTube.com cookie: "Netscape HTTP Cookie File": https://github.com/ytdl-org/youtube-dl/blob/master/README.md#how-do-i-pass-cookies-to-youtube-dl
-
-
 # Imports
 import datetime
 import os
@@ -17,7 +11,7 @@ import json
 import codecs
 
 if '--help' in sys.argv: # print help message and exit
-    print("""ytm-yl-downloader.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...)
+    print("""ytm-yl-downloader.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
 
 [...] - required arguments
 (...) - optional arguments
@@ -37,17 +31,20 @@ Arguments:
     --output        • the absolute path to folder where you want your music downloaded
                     • only necessary if you are to select 'd' mode
     
-    --mode          • mode (t|d|s|j) to request for the application to complete""")
+    --mode          • mode (t|d|s|m|j) to request for the application to complete
+    
+    --json          • the absolute path to an existing JSON playlist data file instead of downloading""")
     sys.exit()
+
 
 # Handlers
 def logwrite(string):
     print ('[LOG] {}'.format(string))  # prints LOG stdout
-    with open('{}/log.txt'.format(path_main), 'a') as file:
+    with open(path_log, 'a') as file:
         file.write('[[LOG] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as LOG
 
 def errorwrite(string, exit = 0):
-    with open('{}/log.txt'.format(path_main), 'a') as file:
+    with open(path_log, 'a') as file:
         file.write('[ERROR] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as ERROR
     if not exit:
         print ('[ERROR] {} Exiting...'.format(string))  # prints ERROR stdout
@@ -57,17 +54,22 @@ def errorwrite(string, exit = 0):
 
 
 # Paths
-path_json = '{}/metadata.json'.format(os.path.abspath(os.path.dirname(__file__)))
 path_main = os.path.abspath(os.path.dirname(__file__))
 
 if '--output' in sys.argv: # if output folder passed in arguments
     # apply the output path passed in arguments to global variables
     path_song = sys.argv[sys.argv.index('--output') + 1]
     path_temp = '{}/temp'.format(path_song)
-else:
-    # otherwise, apply default paths
+    path_log = '{}/ytm-yld.log.txt'.format(path_song)
+else: # otherwise, apply default paths
     path_song = '{}/Music/ytm-yl-downloader'.format(os.path.expanduser('~'))
     path_temp = '{}/Music/ytm-yl-downloader/temp'.format(os.path.expanduser('~'))
+    path_log = '{}/Music/ytm-yl-downloader/ytm-yld.log.txt'.format(os.path.expanduser('~'))
+
+if '--json' in sys.argv: # if JSON playlist metadata passed in arguments
+    path_json = sys.argv[sys.argv.index('--json') + 1]
+else:
+    path_json = '{}/metadata.json'.format(path_song)
 
 if '--ffmpeg' in sys.argv: # if FFmpeg folder passed in arguments
     path_ffmpeg = sys.argv[sys.argv.index('--ffmpeg') + 1]
@@ -93,9 +95,12 @@ else:
 
 # Main programm
 if __name__ == '__main__':
+    logwrite('Making "{}"...'.format(path_song))
+    os.makedirs(path_song, exist_ok=True)
+
     try:
         logwrite('Removing a log file...')
-        os.remove('{}/log.txt'.format(path_main))
+        os.remove(path_log)
     except FileNotFoundError:
         errorwrite('Couldn\'t remove the log file.', 1)
 
@@ -108,16 +113,17 @@ if __name__ == '__main__':
     os.chdir(path_main)
     logwrite('Downloading a JSON metadata playlist file...')
 
-    # os.system('cd "{}" & yt-dlp --cookies="{}" -i -J -- https://music.youtube.com/playlist?list=LM > metadata.json'.format(path_main, path_cookie))
-    with yt_dlp.YoutubeDL({
-        'cookiefile': path_cookie,
-        'no_warnings': True,
-        'dump_single_json': True,
-        'ignoreerrors': True,
-        }) as ydl:
-        with open(path_json, 'w') as file:
-            json.dump(ydl.sanitize_info(ydl.extract_info('https://music.youtube.com/playlist?list=LM'
-                      , download=False)), file)  # writing playlist data to JSON file
+    if '--json' not in sys.argv:
+        # os.system('cd "{}" & yt-dlp --cookies="{}" -i -J -- https://music.youtube.com/playlist?list=LM > metadata.json'.format(path_main, path_cookie))
+        with yt_dlp.YoutubeDL({
+            'cookiefile': path_cookie,
+            'no_warnings': True,
+            'dump_single_json': True,
+            'ignoreerrors': True,
+            }) as ydl:
+            with open(path_json, 'w') as file:
+                json.dump(ydl.sanitize_info(ydl.extract_info('https://music.youtube.com/playlist?list=LM'
+                        , download=False)), file)  # writing playlist data to JSON file
 
 logwrite('Opening a JSON metadata playlist file...')
 try:
@@ -135,25 +141,32 @@ if __name__ == '__main__':
     if json_data['entries']: # check if there are liked songs
         if 's' in mode:
             import playlist_sync
-        if 'd' in mode:
-            import playlist_downloader
+        if 'm' and 'd' in mode:
+            errorwrite("Cannot execute 'download' mode - 'manual' mode chosen also.", 1)
+            import playlist_manual
+        else:
+            if 'd' in mode:
+                import playlist_downloader
+                playlist_downloader.download_songs()
+            if 'm' in mode:
+                import playlist_manual
+
     else:
         errorwrite("No songs to sync/download.", 1)
-
     if 'j' not in mode:
         logwrite('Removing "{}"...'.format(path_json))
         os.remove(path_json)
 
-    logwrite('================================================================================')
+    print('\n')
     logwrite('Execution finished.')
-    logwrite("The log file is at '{}/log.txt'.".format(path_main))
+    logwrite("The log file is at '{}'.".format(path_log))
 
     if 'j' in mode:
         logwrite("Your playlist metadata as a JSON formatted file is available in '{}'.".format(path_json))
     if 't' in mode:
-        logwrite("Your parsed playlist information is available in '{}/songs_info.txt'.".format(path_main))
+        logwrite("Your parsed playlist information is available in '{}/songs_info.txt'.".format(path_song))
     if json_data['entries']: # check if there are liked songs
         if 's' in mode:
             logwrite("Your songs have been synchronised in '{}'.".format(path_song))
-        if 'd' in mode:
+        if 'm' or 'd' in mode:
             logwrite("Your downloaded songs are available in '{}'.".format(path_song))
