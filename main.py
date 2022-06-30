@@ -11,7 +11,7 @@ import json
 import codecs
 
 if '--help' in sys.argv: # print help message and exit
-    print("""ytm-yl-downloader.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
+    print("""ytm-yld.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
 
 [...] - required arguments
 (...) - optional arguments
