@@ -9,6 +9,7 @@
 - Deleting songs that have been removed from the playlist
 - Downloading playlist metadata as a JSON formatted file
 - Format the songs in the playlist to a text file
+- Downloading only the songs 
 
 **This project future plans/updates can be seen at the ['Plans' Project](https://github.com/pepershukov/ytm-yld/projects/1).**  
 
@@ -28,13 +29,16 @@ The latest patch notes of this application can be found [here](https://github.co
 
 ## Usage
 
-_(Update: [#3.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v3.0.0))_ - Revamped arguments
 ```
-ytm-yld.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...)
+ytm-yld.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
 
 [...] - required arguments
 (...) - optional arguments
+Further information on requirements can be found in the README.md.
+https://github.com/pepershukov/ytm-yl-downloader#readme
 
+If the following arguments are not passed, the application will request them when necessary.
+And if they fail to validate within the app, the application will throw an error.
 Arguments:
     --help          • shows this message and exits
 
@@ -46,7 +50,9 @@ Arguments:
     --output        • the absolute path to folder where you want your music downloaded
                     • only necessary if you are to select 'd' mode
     
-    --mode          • mode (t|d|s|j) to request for the application to complete
+    --mode          • mode (t|d|s|m|j) to request for the application to complete
+    
+    --json          • the absolute path to an existing JSON playlist data file instead of downloading
 ```
 *If you choose not to pass the arguments, you will have to enter the paths upon the application input request.*
 
@@ -58,14 +64,16 @@ You will be asked upon starting the application to select the mode of your choic
 _(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))_ As there is **no 'all' mode**, you can **stack the modes together** with an input request; for example, if I would want to go through all the modes, I will write `tds` _(order of items does not matter)_ as the mode of my choice. Similarly, if I would want two specific modes - download & sync - I will write `ds` _(again, order of items does not matter)_; and so on.
 
 **There are currently four modes:**
-- **Playlist-to-text only (`t`)**
+- **Playlist-to-text (`t`)**
   - Saves the songs' information to a text file as a table
-- **Download only (`d`)**
+- **Download (`d`)**
   - Downloads the songs that the application finds not existing locally
-- **Sync only (`s`)** _(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))_
+- **Sync (`s`)** _(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))_
   - Deletes songs stored locally that have been removed from the playlist
-- **JSON only (`j`)** _(Update: [#3.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v3.0.0))_
+- **JSON (`j`)** _(Update: [#3.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v3.0.0))_
   - Does not delete the JSON metadata of the playlist - mainly for advanced users to play around with it
+- **Manual (`m`)** _(Update: [#4.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v4.0.0))_
+  - Gives a choice of songs to download to the user - therefore you have to input songs you want to download manually
 
 ## Building an executable
 
