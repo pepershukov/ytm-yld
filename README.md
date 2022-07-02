@@ -35,7 +35,7 @@ ytm-yld.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (
 [...] - required arguments
 (...) - optional arguments
 Further information on requirements can be found in the README.md.
-https://github.com/pepershukov/ytm-yl-downloader#readme
+https://github.com/pepershukov/ytm-yld#readme
 
 If the following arguments are not passed, the application will request them when necessary.
 And if they fail to validate within the app, the application will throw an error.
