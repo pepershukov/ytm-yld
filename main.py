@@ -9,14 +9,24 @@ import sys
 import yt_dlp
 import json
 import codecs
+import platform
+
+
+if platform.system() == 'Linux' or platform.system() == 'Darwin':
+    exec_name = 'ytm-yld'
+elif platform.system() == 'Windows':
+    exec_name = 'ytm-yld.exe'
+else:
+    print('[ERROR] Your system is not supported.\nPlease report this message with your system details via an Issue on the project\'s GitHub page:\nhttps://github.com/pepershukov/ytm-yld/issues')
+    sys.exit()
 
 if '--help' in sys.argv: # print help message and exit
-    print("""ytm-yld.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
+    print("""{} (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
 
 [...] - required arguments
 (...) - optional arguments
 Further information on requirements can be found in the README.md.
-https://github.com/pepershukov/ytm-yl-downloader#readme
+https://github.com/pepershukov/ytm-yld#readme
 
 If the following arguments are not passed, the application will request them when necessary.
 And if they fail to validate within the app, the application will throw an error.
@@ -33,7 +43,7 @@ Arguments:
     
     --mode          • mode (t|d|s|m|j) to request for the application to complete
     
-    --json          • the absolute path to an existing JSON playlist data file instead of downloading""")
+    --json          • the absolute path to an existing JSON playlist data file instead of downloading""".format(exec_name))
     sys.exit()
 
 
@@ -62,9 +72,9 @@ if '--output' in sys.argv: # if output folder passed in arguments
     path_temp = '{}/temp'.format(path_song)
     path_log = '{}/ytm-yld.log.txt'.format(path_song)
 else: # otherwise, apply default paths
-    path_song = '{}/Music/ytm-yl-downloader'.format(os.path.expanduser('~'))
-    path_temp = '{}/Music/ytm-yl-downloader/temp'.format(os.path.expanduser('~'))
-    path_log = '{}/Music/ytm-yl-downloader/ytm-yld.log.txt'.format(os.path.expanduser('~'))
+    path_song = '{}/Music/ytm-yld'.format(os.path.expanduser('~'))
+    path_temp = '{}/Music/ytm-yld/temp'.format(os.path.expanduser('~'))
+    path_log = '{}/Music/ytm-yld/ytm-yld.log.txt'.format(os.path.expanduser('~'))
 
 if '--json' in sys.argv: # if JSON playlist metadata passed in arguments
     path_json = sys.argv[sys.argv.index('--json') + 1]
@@ -95,8 +105,8 @@ else:
 
 # Main programm
 if __name__ == '__main__':
-    logwrite('Making "{}"...'.format(path_song))
     os.makedirs(path_song, exist_ok=True)
+    logwrite('Made "{}".'.format(path_song))
 
     try:
         logwrite('Removing a log file...')
@@ -141,7 +151,7 @@ if __name__ == '__main__':
     if json_data['entries']: # check if there are liked songs
         if 's' in mode:
             import playlist_sync
-        if 'm' and 'd' in mode:
+        if 'm' in mode and 'd' in mode:
             errorwrite("Cannot execute 'download' mode - 'manual' mode chosen also.", 1)
             import playlist_manual
         else:
@@ -168,5 +178,5 @@ if __name__ == '__main__':
     if json_data['entries']: # check if there are liked songs
         if 's' in mode:
             logwrite("Your songs have been synchronised in '{}'.".format(path_song))
-        if 'm' or 'd' in mode:
+        if 'm' in mode or 'd' in mode:
             logwrite("Your downloaded songs are available in '{}'.".format(path_song))
