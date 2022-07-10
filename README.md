@@ -89,7 +89,7 @@ This further guide is mainly for developers, trying to either test their code or
  >python -m pip install -U -r requirements.txt && ^
  >pyinstaller --name ytm-yld --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py && ^
  >rmdir /s /q temp && ^
- >del /s /q .spec ytm-yld.spec`
+ >del /s /q .spec ytm-yld.spec
  >```
  >**Linux:** 
  >```
