@@ -80,8 +80,25 @@ This further guide is mainly for developers, trying to either test their code or
 
 1. Download and install [Python](https://python.org) _(if not already)_  
  1.1 **(Windows)** During install, make sure to check `Add Python x.x.x to PATH`. Otherwise, [add Python and scripts to PATH manually](https://datatofish.com/add-python-to-windows-path/).
-2. Download and install [git-scm](https://git-scm.com/downloads)
-3. Run this command in the Terminal:
- >**Windows:** `git clone https://github.com/pepershukov/ytm-yld.git %userprofile%/Downloads/ytm-yld && cd %userprofile%/Downloads/ytm-yld && python -m pip install -U -r requirements.txt && pyinstaller --name ytm-yld --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py && rmdir /s /q temp && del /s /q .spec ytm-yld.spec`  
- >**Linux:** `git clone https://github.com/pepershukov/ytm-yld.git ~/Downloads/ytm-yld; cd ~/Downloads/ytm-yld; alias python='python3'; python -m pip install -U -r requirements.txt; export PATH="$HOME/.local/bin:$PATH"; pyinstaller --name ytm-yld --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py; rm /r temp; rm ytm-yld.spec`
+2. Download and install [git-scm](https://git-scm.com/downloads) _(if not already)_
+3. Run this command in the Terminal (copy & paste):
+ >**Windows:**
+ >```
+ >git clone https://github.com/pepershukov/ytm-yld.git %userprofile%/Downloads/ytm-yld && ^
+ >cd %userprofile%/Downloads/ytm-yld && ^
+ >python -m pip install -U -r requirements.txt && ^
+ >pyinstaller --name ytm-yld --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py && ^
+ >rmdir /s /q temp && ^
+ >del /s /q .spec ytm-yld.spec`
+ >```
+ >**Linux:** 
+ >```
+ >git clone https://github.com/pepershukov/ytm-yld.git ~/Downloads/ytm-yld; \
+ >cd ~/Downloads/ytm-yld; \
+ >alias python='python3'; \
+ >python -m pip install -U -r requirements.txt; \
+ >export PATH="$HOME/.local/bin:$PATH"; \
+ >pyinstaller --name ytm-yld --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py; rm -r temp; \
+ >rm ytm-yld.spec
+ >```    
 4. You will find your executable as `ytm-yld` *(Linux)* or `ytm-yld.exe` *(Windows)*
