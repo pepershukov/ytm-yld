@@ -12,10 +12,10 @@ import codecs
 import platform
 
 
-if platform.system() == 'Linux' or platform.system() == 'Darwin':
-    exec_name = 'ytm-yld'
+if platform.system() == 'Linux':
+    exec_name = 'ytm-yld_linux'
 elif platform.system() == 'Windows':
-    exec_name = 'ytm-yld.exe'
+    exec_name = 'ytm-yld_windows.exe'
 else:
     print('[ERROR] Your system is not supported.\nPlease report this message with your system details via an Issue on the project\'s GitHub page:\nhttps://github.com/pepershukov/ytm-yld/issues')
     sys.exit()
