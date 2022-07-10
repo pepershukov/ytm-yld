@@ -61,7 +61,7 @@ _(Update: [#1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))
 ## Quickstart
 
 You will be asked upon starting the application to select the mode of your choice.  
-_(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))_ As there is **no 'all' mode**, you can **stack the modes together** with an input request; for example, if I would want to go through all the modes, I will write `tds` _(order of items does not matter)_ as the mode of my choice. Similarly, if I would want two specific modes - download & sync - I will write `ds` _(again, order of items does not matter)_; and so on.
+_(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))_ As there is **no 'all' mode**, you can **stack the modes together** with an input request; for example, if I would want to go through all the modes, I will write `tdsjm` _(order of items does not matter)_ as the mode of my choice. Similarly, if I would want two specific modes - download & sync - I will write `ds` _(again, order of items does not matter)_; and so on.
 
 **There are currently four modes:**
 - **Playlist-to-text (`t`)**
