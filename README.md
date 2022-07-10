@@ -29,7 +29,7 @@ The requirements download/instructions are listed in the [`requirements.txt`](ht
 ## Usage
 
 ```
-ytm-yld.exe (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
+ytm-yld (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
 
 [...] - required arguments
 (...) - optional arguments
