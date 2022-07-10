@@ -77,11 +77,12 @@ _(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))
 
 ## Building an executable
 
-This further guide is mainly for developers, trying to either test their code or to experiment with the results of their contribution to this project. It will show you how to build an executable _(`.exe`)_ out of a Python project.
+This further guide is mainly for developers, trying to either test their code or to experiment with the results of their contribution to this project. It will show you how to build an executable out of a Python project.
 
 1. Download and install [Python](https://python.org) _(if not already)_  
- 1.1 During install, make sure to check `Add Python x.x.x to PATH`. Otherwise, [add Python binaries and libraries to PATH manually](https://datatofish.com/add-python-to-windows-path/).
-2. Install `pyinstaller` using package installer in the Command Prompt/PowerShell: `pip install pyinstaller`
-3. Change your current working directory to the directory where your project is located.
-4. Execute the build: `pyinstaller --name ytm-yld --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py`
-5. Your executable will be in the root of your directory where the project is located by the name `ytm-yld.exe`.
+ 1.1 **(Windows)** During install, make sure to check `Add Python x.x.x to PATH`. Otherwise, [add Python and scripts to PATH manually](https://datatofish.com/add-python-to-windows-path/).
+2. Download and install [git-scm](https://git-scm.com/downloads)
+3. Run this command in the Terminal:
+ >**Windows:** `git clone https://github.com/pepershukov/ytm-yld.git %userprofile%/Downloads/ytm-yld && cd %userprofile%/Downloads/ytm-yld && python -m pip install -U -r requirements.txt && pyinstaller --name ytm-yld --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py && rmdir /s /q temp && del /s /q .spec ytm-yld.spec`  
+ >**Linux:** `git clone https://github.com/pepershukov/ytm-yld.git ~/Downloads/ytm-yld; cd ~/Downloads/ytm-yld; alias python='python3'; python -m pip install -U -r requirements.txt; export PATH="$HOME/.local/bin:$PATH"; pyinstaller --name ytm-yld --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py; rm /r temp; rm ytm-yld.spec`
+4. You will find your executable as `ytm-yld` *(Linux)* or `ytm-yld.exe` *(Windows)*
