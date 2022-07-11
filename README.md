@@ -15,7 +15,7 @@
 
 Instructions per version may differ, so **if you are looking for instructions on previous versions, look into a specific version tag accordingly.**
 
-The latest patch notes of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).
+**The latest release of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
 
 ## Requirements
 
@@ -28,7 +28,7 @@ The latest patch notes of this application can be found [here](https://github.co
 ### Hardware minimum requirements
 | Operating System | Linux                                                                                     | Windows                                                                                  |
 |------------------|-------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| RAM              | Minimum 100MB Need more than 100MB if you have more than ~200 songs (500KB per one song)  | Minimum 100MB Need more than 100MB if you have more than ~500 songs (200KB per one song) |
+| RAM              | Minimum 100MB. Need more than 100MB if you have more than ~200 songs (500KB per one song)  | Minimum 100MB. Need more than 100MB if you have more than ~500 songs (200KB per one song) |
 | Architecture     | x86_64                                                                                    | x86_64                                                                                   |
 | Other            | Internet access                                                                           | Internet access                                                                          |
 
