@@ -20,7 +20,7 @@ for remote_song in main.json_data['entries']: # parsing through JSON data
         else:
             info.append('')
     else:
-        main.errorwrite('Song #{} is invalid on YouTube.com.'.format(counter, 1))
+        main.errorwrite('Song #{} is invalid on YouTube.com.'.format(counter), 1)
         continue
     table.append(info)
     main.logwrite('Added entry #{}/{}'.format(counter,
