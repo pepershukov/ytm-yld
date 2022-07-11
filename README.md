@@ -19,10 +19,13 @@ The latest patch notes of this application can be found [here](https://github.co
 
 ## Requirements
 
+### Software requirements
 - ***YouTube.com* cookie as a "Netscape HTTP Cookie File"**
   - *This application does not store/send the cookies for the use outside of this application.*
 - ***FFmpeg* installed**
   - _(Update: [#1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ **Only necessary if you are to download music from YouTube. If you want to simply parse the playlist into a text output or sync songs stored locally, FFmpeg is not required.**
+
+TODO: Hardware requirements
 
 The requirements download/instructions are listed in the [`requirements.txt`](https://raw.githubusercontent.com/pepershukov/ytm-yld/main/requirements.txt) in addition to Python pip packages needed with this project.
 
@@ -89,7 +92,7 @@ This further guide is mainly for developers, trying to either test their code or
  >python -m pip install -U -r requirements.txt && ^
  >pyinstaller --name ytm-yld_windows --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py && ^
  >rmdir /s /q temp && ^
- >del /s /q ytm-yld_linux.spec
+ >del /s /q ytm-yld_windows.spec
  >```
  >**Linux:** 
  >```
