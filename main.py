@@ -35,11 +35,11 @@ Arguments:
 
     --cookie        • the absolute path to file of a YouTube.com cookie as a "Netscape HTTP Cookie File"
 
-    --ffmpeg        • the absolute path to folder of the binaries of FFmpeg
+    --ffmpeg        • (Windows) the absolute path to *folder* of the binaries of FFmpeg
+                    • (Linux) the absolute path to the FFmpeg *file* binary
                     • only necessary if you are to select 'd' mode
     
-    --output        • the absolute path to folder where you want your music downloaded
-                    • only necessary if you are to select 'd' mode
+    --output        • the absolute path to folder where you want your music(synced/downloaded)/playlist
     
     --mode          • mode (t|d|s|m|j) to request for the application to complete
     
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     if '--mode' in sys.argv:
         mode = sys.argv[sys.argv.index('--mode') + 1]
     else:
-        mode = input('[INPUT] playlist-to-text/donwload/sync? ([t|d|s]): ')
+        mode = input('[INPUT] playlist-to-text/donwload/sync/manual/json? ([t|d|s|m|j]): ')
 
     logwrite("Changing current working directory to '{}'...".format(path_main))
     os.chdir(path_main)

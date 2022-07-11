@@ -1,7 +1,7 @@
 # **YouTube Music - 'Your Likes' Downloader**
 ## A downloader of your all-time favourite playlist for autonomous listening
 
-***YouTube Music - 'Your Likes' Downloader*** or else ***ytm-yld***, is a **command-line/terminal utility** used to either download or parse your favourite songs from YouTube. *Therefore, because it is a command-line utility, there is **no graphical user interface.***
+**YouTube Music - 'Your Likes' Downloader** or else **ytm-yld**, is a **command-line/terminal utility** used to either download or parse your favourite songs from YouTube Music. *Therefore, because it is a command-line utility, there is **no graphical user interface.***
 
 **Features:**
 - Downloading of a whole playlist
@@ -15,7 +15,7 @@
 
 Instructions per version may differ, so **if you are looking for instructions on previous versions, look into a specific version tag accordingly.**
 
-The latest patch notes of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest) and the latest version of the application to download can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest/download/ytm-yld.exe).
+The latest patch notes of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).
 
 ## Requirements
 
@@ -43,11 +43,11 @@ Arguments:
 
     --cookie        • the absolute path to file of a YouTube.com cookie as a "Netscape HTTP Cookie File"
 
-    --ffmpeg        • the absolute path to folder of the binaries of FFmpeg
+    --ffmpeg        • (Windows) the absolute path to *folder* of the binaries of FFmpeg
+                    • (Linux) the absolute path to the FFmpeg *file* binary
                     • only necessary if you are to select 'd' mode
     
-    --output        • the absolute path to folder where you want your music downloaded
-                    • only necessary if you are to select 'd' mode
+    --output        • the absolute path to folder where you want your music(synced/downloaded)/playlist
     
     --mode          • mode (t|d|s|m|j) to request for the application to complete
     
@@ -81,24 +81,25 @@ This further guide is mainly for developers, trying to either test their code or
 1. Download and install [Python](https://python.org) _(if not already)_  
  1.1 **(Windows)** During install, make sure to check `Add Python x.x.x to PATH`. Otherwise, [add Python and scripts to PATH manually](https://datatofish.com/add-python-to-windows-path/).
 2. Download and install [git-scm](https://git-scm.com/downloads) _(if not already)_
-3. Run this command in the Terminal (copy & paste):
+3. Run this command in the Terminal (copy & paste & Enter):
  >**Windows:**
  >```
  >git clone https://github.com/pepershukov/ytm-yld.git %userprofile%/Downloads/ytm-yld && ^
  >cd %userprofile%/Downloads/ytm-yld && ^
  >python -m pip install -U -r requirements.txt && ^
- >pyinstaller --name ytm-yld --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py && ^
+ >pyinstaller --name ytm-yld_windows --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py && ^
  >rmdir /s /q temp && ^
- >del /s /q ytm-yld.spec
+ >del /s /q ytm-yld_linux.spec
  >```
  >**Linux:** 
  >```
  >git clone https://github.com/pepershukov/ytm-yld.git ~/Downloads/ytm-yld; \
  >cd ~/Downloads/ytm-yld; \
  >alias python='python3'; \
- >python -m pip install -U -r requirements.txt; \
  >export PATH="$HOME/.local/bin:$PATH"; \
- >pyinstaller --name ytm-yld --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py; rm -r temp; \
- >rm ytm-yld.spec
+ >python -m pip install -U -r requirements.txt; \
+ >pyinstaller --name ytm-yld_linux --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py; \
+ >rm -r temp; \
+ >rm ytm-yld_linux.spec
  >```    
-4. You will find your executable as `ytm-yld` *(Linux)* or `ytm-yld.exe` *(Windows)*
+4. You will find your executable as `ytm-yld_linux` *(Linux)* or `ytm-yld_windows.exe` *(Windows)*
