@@ -18,17 +18,17 @@ for full_mp3_file in glob.glob('{}/*.mp3'.format(main.path_song)):  # parse thro
             local_song = mutagen.easyid3.EasyID3(full_mp3_file)  # open mp3 file
 
             # gather local song metadata
-            local_song_data = [local_song['title']]
+            local_song_data = [local_song['title'][0]]
             if 'artist' in local_song.keys():
                 local_song_data.append(local_song['artist'])
             if 'album' in local_song.keys():
-                local_song_data.append(local_song['album'])
+                local_song_data.append(local_song['album'][0])
             
             # gather remote song metadata
             remote_song_data = [remote_song['title']]
-            if remote_song['artist']:
-                remote_song_data.append(remote_song['artist'])
-            if remote_song['album']:
+            if 'creator' in remote_song.keys():
+                remote_song_data.append(remote_song['artist'].split(', '))
+            if 'album' in remote_song.keys():
                 remote_song_data.append(remote_song['album'])
 
             # compare the data...

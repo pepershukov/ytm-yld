@@ -10,6 +10,7 @@ import yt_dlp
 import json
 import codecs
 import platform
+import configparser
 
 
 if platform.system() == 'Linux':
@@ -21,7 +22,8 @@ else:
     sys.exit()
 
 if '--help' in sys.argv: # print help message and exit
-    print("""{} (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
+    if platform.system() == 'Windows':
+        print("""{} (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
 
 [...] - required arguments
 (...) - optional arguments
@@ -31,21 +33,48 @@ https://github.com/pepershukov/ytm-yld#readme
 If the following arguments are not passed, the application will request them when necessary.
 And if they fail to validate within the app, the application will throw an error.
 Arguments:
-    --help          • shows this message and exits
+    --help          - shows this message and exits
 
-    --cookie        • the absolute path to file of a YouTube.com cookie as a "Netscape HTTP Cookie File"
+    --cookie        - the absolute path to file of a YouTube.com cookie as a 'Netscape HTTP Cookie File'
 
-    --ffmpeg        • (Windows) the absolute path to *folder* of the binaries of FFmpeg
-                    • (Linux) the absolute path to the FFmpeg *file* binary
-                    • only necessary if you are to select 'd' mode
+    --ffmpeg        - the absolute path to folder of the binaries of FFmpeg
+                    - only necessary if you are to select 'd' mode
     
-    --output        • the absolute path to folder where you want your music(synced/downloaded)/playlist
+    --output        - the absolute path to folder where you want your music(synced/downloaded)/playlist-to-text file
     
-    --mode          • mode (t|d|s|m|j) to request for the application to complete
+    --mode          - mode (t|d|s|m|j) to request for the application to complete
     
-    --json          • the absolute path to an existing JSON playlist data file instead of downloading""".format(exec_name))
+    --json          - the absolute path to an existing JSON playlist data file instead of downloading
+    
+    --config        - the absolute path to the config file containing section `ytm-yld`
+                    - see https://github.com/pepershukov/ytm-yld#config for quickstart""".format(exec_name))
+    elif platform.system() == 'Linux':
+        print("""{} (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...) (--config ...)
+
+[...] - required arguments
+(...) - optional arguments
+Further information on requirements can be found in the README.md.
+https://github.com/pepershukov/ytm-yld#readme
+
+If the following arguments are not passed, the application will request them when necessary.
+And if they fail to validate within the app, the application will throw an error.
+Arguments:
+    --help          - shows this message and exits
+
+    --cookie        - the absolute path to file of a YouTube.com cookie as a 'Netscape HTTP Cookie File'
+
+    --ffmpeg        - the absolute path to FFmpeg file binary
+                    - only necessary if you are to select 'd' mode
+    
+    --output        - the absolute path to folder where you want your music(synced/downloaded)/playlist-to-text file
+    
+    --mode          - mode (t|d|s|m|j) to request for the application to complete
+    
+    --json          - the absolute path to an existing JSON playlist data file instead of downloading
+    
+    --config        - the absolute path to the config file containing section `ytm-yld`
+                    - see https://github.com/pepershukov/ytm-yld#config for quickstart""".format(exec_name))
     sys.exit()
-
 
 # Handlers
 def logwrite(string):
@@ -64,33 +93,80 @@ def errorwrite(string, exit = 0):
 
 
 # Paths
+if '--config' in sys.argv:
+    config = configparser.ConfigParser()
+    config.read(sys.argv[sys.argv.index('--config') + 1])
+    config = config['ytm-yld']
+
+    if 'output' in config:
+        path_song = config['output']
+        path_temp = '{}/temp'.format(config['output'])
+        path_log = '{}/ytm-yld.log.txt'.format(config['output'])
+    else:
+        path_song = ''
+        path_temp = ''
+        path_log = ''
+
+    if 'json' in config:
+        path_json = config['json']
+    else:
+        path_json = ''
+
+    if 'ffmpeg' in config:
+        path_ffmpeg = config['ffmpeg']
+    else:
+        path_ffmpeg = ''
+
+    if 'cookie' in config:
+        path_cookie = config['cookie']
+    else:
+        path_cookie = ''
+
+    if 'mode' in config:
+        mode = config['mode']
+    else:
+        mode = ''
+
+else:
+    path_song = ''
+    path_temp = ''
+    path_log = ''
+    path_json = ''
+    path_ffmpeg = ''
+    path_cookie = ''
+    mode = ''
+
 path_main = os.path.abspath(os.path.dirname(__file__))
 
-if '--output' in sys.argv: # if output folder passed in arguments
-    # apply the output path passed in arguments to global variables
-    path_song = sys.argv[sys.argv.index('--output') + 1]
-    path_temp = '{}/temp'.format(path_song)
-    path_log = '{}/ytm-yld.log.txt'.format(path_song)
-else: # otherwise, apply default paths
-    path_song = '{}/Music/ytm-yld'.format(os.path.expanduser('~'))
-    path_temp = '{}/Music/ytm-yld/temp'.format(os.path.expanduser('~'))
-    path_log = '{}/Music/ytm-yld/ytm-yld.log.txt'.format(os.path.expanduser('~'))
+if not path_song:
+    if '--output' in sys.argv: # if output folder passed in arguments
+        # apply the output path passed in arguments to global variables
+        path_song = sys.argv[sys.argv.index('--output') + 1]
+        path_temp = '{}/temp'.format(path_song)
+        path_log = '{}/ytm-yld.log.txt'.format(path_song)
+    else: # otherwise, apply default paths
+        path_song = '{}/Music/ytm-yld'.format(os.path.expanduser('~'))
+        path_temp = '{}/Music/ytm-yld/temp'.format(os.path.expanduser('~'))
+        path_log = '{}/Music/ytm-yld/ytm-yld.log.txt'.format(os.path.expanduser('~'))
 
-if '--json' in sys.argv: # if JSON playlist metadata passed in arguments
-    path_json = sys.argv[sys.argv.index('--json') + 1]
-else:
-    path_json = '{}/metadata.json'.format(path_song)
+if not path_json:
+    if '--json' in sys.argv: # if JSON playlist metadata passed in arguments
+        path_json = sys.argv[sys.argv.index('--json') + 1]
+    else:
+        path_json = '{}/metadata.json'.format(path_song)
 
-if '--ffmpeg' in sys.argv: # if FFmpeg folder passed in arguments
-    path_ffmpeg = sys.argv[sys.argv.index('--ffmpeg') + 1]
-else:
-    errorwrite('FFmpeg path not passed in args.', 1)  # if not passed, handle an error
+if not path_ffmpeg:
+    if '--ffmpeg' in sys.argv: # if FFmpeg folder passed in arguments
+        path_ffmpeg = sys.argv[sys.argv.index('--ffmpeg') + 1]
+    else:
+        errorwrite('FFmpeg path not passed in args.', 1)  # if not passed, handle an error
 
-if '--cookie' in sys.argv:
-    path_cookie = sys.argv[sys.argv.index('--cookie') + 1]  # gets YouTube.com cookie path from arguments
-else:
-    path_cookie = input('[INPUT] Enter the absolute path to YouTube.com "Netscape HTTP Cookie File": '
-                        ) # if not passed, ask the user for one
+if not path_cookie:
+    if '--cookie' in sys.argv:
+        path_cookie = sys.argv[sys.argv.index('--cookie') + 1]  # gets YouTube.com cookie path from arguments
+    else:
+        path_cookie = input('[INPUT] Enter the absolute path to YouTube.com "Netscape HTTP Cookie File": '
+                            ) # if not passed, ask the user for one
 if os.path.isfile(path_cookie):  # checks if cookie file is existing
     with open(path_cookie, 'r') as file:
         data = file.readlines()[0]
@@ -114,16 +190,17 @@ if __name__ == '__main__':
     except FileNotFoundError:
         errorwrite('Couldn\'t remove the log file.', 1)
 
-    if '--mode' in sys.argv:
-        mode = sys.argv[sys.argv.index('--mode') + 1]
-    else:
-        mode = input('[INPUT] playlist-to-text/donwload/sync/manual/json? ([t|d|s|m|j]): ')
+    if not mode:
+        if '--mode' in sys.argv:
+            mode = sys.argv[sys.argv.index('--mode') + 1]
+        else:
+            mode = input('[INPUT] playlist-to-text/donwload/sync/manual/json? ([t|d|s|m|j]): ')
 
     logwrite("Changing current working directory to '{}'...".format(path_main))
     os.chdir(path_main)
     logwrite('Downloading a JSON metadata playlist file...')
 
-    if '--json' not in sys.argv:
+    if '--json' not in sys.argv or 'json' not in config:
         # os.system('cd "{}" & yt-dlp --cookies="{}" -i -J -- https://music.youtube.com/playlist?list=LM > metadata.json'.format(path_main, path_cookie))
         with yt_dlp.YoutubeDL({
             'cookiefile': path_cookie,

@@ -23,21 +23,21 @@ Instructions per version may differ, so **if you are looking for instructions on
 - ***YouTube.com* cookie as a "Netscape HTTP Cookie File"**
   - *This application does not store/send the cookies for the use outside of this application.*
 - ***FFmpeg* installed**
-  - _(Update: [#1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ **Only necessary if you are to download music from YouTube. If you want to simply parse the playlist into a text output or sync songs stored locally, FFmpeg is not required.**
+  - _(Update: [#1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ Only necessary if you are to download music from YouTube. If you want to simply parse the playlist into a text output or sync songs stored locally, FFmpeg is not required.
 
 ### Hardware minimum requirements
-| Operating System | Linux                                                                                     | Windows                                                                                  |
-|------------------|-------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| RAM              | Minimum 100MB. Need more than 100MB if you have more than ~200 songs (500KB per one song)  | Minimum 100MB. Need more than 100MB if you have more than ~500 songs (200KB per one song) |
-| Architecture     | x86_64                                                                                    | x86_64                                                                                   |
-| Other            | Internet access                                                                           | Internet access                                                                          |
+| Operating System | Linux                                                                                            | Windows                                                                                          |
+|------------------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| RAM              | Minimum 100MB usable. Need more than 100MB if you have more than ~200 songs (500KB per one song) | Minimum 100MB usable. Need more than 100MB if you have more than ~500 songs (200KB per one song) |
+| Architecture     | x86_64                                                                                           | x86_64                                                                                           |
+| Other            | Internet access                                                                                  | Internet access                                                                                  |
 
 The requirements download/instructions are listed in the [`requirements.txt`](https://raw.githubusercontent.com/pepershukov/ytm-yld/main/requirements.txt) in addition to Python pip packages needed with this project.
 
 ## Usage
 
 ```
-ytm-yld (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...)
+ytm-yld (--help) [--cookie ...] (--ffmpeg ...) (--output ...) (--mode ...) (--json ...) (--config ...)
 
 [...] - required arguments
 (...) - optional arguments
@@ -47,19 +47,22 @@ https://github.com/pepershukov/ytm-yld#readme
 If the following arguments are not passed, the application will request them when necessary.
 And if they fail to validate within the app, the application will throw an error.
 Arguments:
-    --help          • shows this message and exits
+    --help          - shows this message and exits
 
-    --cookie        • the absolute path to file of a YouTube.com cookie as a "Netscape HTTP Cookie File"
+    --cookie        - the absolute path to file of a YouTube.com cookie as a 'Netscape HTTP Cookie File'
 
-    --ffmpeg        • (Windows) the absolute path to *folder* of the binaries of FFmpeg
-                    • (Linux) the absolute path to the FFmpeg *file* binary
-                    • only necessary if you are to select 'd' mode
+    --ffmpeg        - (Windows) the absolute path to FFmpeg folder
+                    - (Linux) the absolute path to FFmpeg file binary
+                    - only necessary if you are to select 'd' mode
     
-    --output        • the absolute path to folder where you want your music(synced/downloaded)/playlist
+    --output        - the absolute path to folder where you want your music(synced/downloaded)/playlist-to-text file
     
-    --mode          • mode (t|d|s|m|j) to request for the application to complete
+    --mode          - mode (t|d|s|m|j) to request for the application to complete
     
-    --json          • the absolute path to an existing JSON playlist data file instead of downloading
+    --json          - the absolute path to an existing JSON playlist data file instead of downloading
+    
+    --config        - the absolute path to the config file containing section `ytm-yld`
+                    - see https://github.com/pepershukov/ytm-yld#config for quickstart
 ```
 *If you choose not to pass the arguments, you will have to enter the paths upon the application input request.*
 
@@ -81,6 +84,27 @@ _(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))
   - Does not delete the JSON metadata of the playlist - mainly for advanced users to play around with it
 - **Manual (`m`)** _(Update: [#4.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v4.0.0))_
   - Gives a choice of songs to download to the user - therefore you have to input songs you want to download manually
+
+## Config
+You can pass the config file in the arguments under the `--config` tag instead of passing all other arguments you need. Config files otherwise could be used to automate the application start further or make its use easier. Further is a quickstart to the config file format.
+
+- The application uses an `.ini`-like format
+- All the variables regarding the application have to be under sector `ytm-yld`
+  - The application will throw an error and exit if this fails
+- The variable names are the same as argument tags
+- The values of the variables must not be empty
+- Not all variables have to be passed
+  - You still can pass the arguments for variables that are not in the config file
+
+Here is an **example** of a **full config file**:
+```
+[ytm-yld]
+cookie = 'absolute/path/to/cookie'
+ffmpeg = 'absolute/path/to/ffmpeg'
+output = 'absolute/path/to/output'
+mode = 'tdsjm'
+json = 'absolute/path/to/json'
+```
 
 ## Building an executable
 

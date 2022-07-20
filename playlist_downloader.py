@@ -22,8 +22,8 @@ def process_songs(max_song_num):
         itertools.product(glob.glob('{}/*.mp3'.format(main.path_temp)),
                         main.json_data['entries']):  # parse through mp3 files and playlist metadata
         if remote_song:  # checks for song validity on YouTube
-            if '{}\\{}.mp3'.format(main.path_temp, remote_song['id']) \
-                == full_mp3_file:  # if data matches-
+            if '{}\\{}.mp3'.format(main.path_temp, remote_song['id']) == full_mp3_file \
+                or '{}/{}.mp3'.format(main.path_temp, remote_song['id']) == full_mp3_file:  # if data matches-
                 main.logwrite('Opening #{} thumbnail...'.format(counter))
                 image = PIL.Image.open('{}/{}.webp'.format(main.path_temp,
                                     remote_song['id'])).convert('RGB')
