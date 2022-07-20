@@ -26,11 +26,11 @@ Instructions per version may differ, so **if you are looking for instructions on
   - _(Update: [#1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ Only necessary if you are to download music from YouTube. If you want to simply parse the playlist into a text output or sync songs stored locally, FFmpeg is not required.
 
 ### Hardware minimum requirements
-| Operating System | Linux                                                                                            | Windows                                                                                          |
-|------------------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
-| RAM              | Minimum 100MB usable. Need more than 100MB if you have more than ~200 songs (500KB per one song) | Minimum 100MB usable. Need more than 100MB if you have more than ~500 songs (200KB per one song) |
-| Architecture     | x86_64                                                                                           | x86_64                                                                                           |
-| Other            | Internet access                                                                                  | Internet access                                                                                  |
+| Operating System | Linux | Windows |
+|---|---|---|
+| RAM | Minimum 100MB usable. Need more than 100MB if you have more than ~200 songs (500KB per one song) | Minimum 100MB usable. Need more than 100MB if you have more than ~500 songs (200KB per one song) |
+| Architecture | x86_64 | x86_64 |
+| Other | Internet access | Internet access |
 
 The requirements download/instructions are listed in the [`requirements.txt`](https://raw.githubusercontent.com/pepershukov/ytm-yld/main/requirements.txt) in addition to Python pip packages needed with this project.
 
