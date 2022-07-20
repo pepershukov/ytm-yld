@@ -1,0 +1,157 @@
+<h1 id="-youtube-music-your-likes-downloader-"><strong>YouTube Music - &#39;Your Likes&#39; Downloader</strong></h1>
+<h2 id="a-downloader-of-your-all-time-favourite-playlist-for-autonomous-listening">A downloader of your all-time favourite playlist for autonomous listening</h2>
+<p><strong>YouTube Music - &#39;Your Likes&#39; Downloader</strong> or else <strong>ytm-yld</strong>, is a <strong>command-line/terminal utility</strong> used to either download or parse your favourite songs from YouTube Music. <em>Therefore, because it is a command-line utility, there is <strong>no graphical user interface.</strong></em></p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Downloading of a whole playlist</li>
+<li>Downloading of a part of a playlist for newly added songs</li>
+<li>Deleting songs that have been removed from the playlist</li>
+<li>Downloading playlist metadata as a JSON formatted file</li>
+<li>Format the songs in the playlist to a text file</li>
+<li>Downloading only the songs that you want</li>
+</ul>
+<p><strong>This project future plans/updates can be seen at the <a href="https://github.com/pepershukov/ytm-yld/projects/1">&#39;Plans&#39; Project</a>.</strong>  </p>
+<p>Instructions per version may differ, so <strong>if you are looking for instructions on previous versions, look into a specific version tag accordingly.</strong></p>
+<p><strong>The latest release of this application can be found <a href="https://github.com/pepershukov/ytm-yld/releases/latest">here</a>.</strong></p>
+<h2 id="requirements">Requirements</h2>
+<h3 id="software-requirements">Software requirements</h3>
+<ul>
+<li><strong><em>YouTube.com</em> cookie as a &quot;Netscape HTTP Cookie File&quot;</strong><ul>
+<li><em>This application does not store/send the cookies for the use outside of this application.</em></li>
+</ul>
+</li>
+<li><strong><em>FFmpeg</em> installed</strong><ul>
+<li><em>(Update: <a href="https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0">#1.1.0+</a>)</em> Only necessary if you are to download music from YouTube. If you want to simply parse the playlist into a text output or sync songs stored locally, FFmpeg is not required.</li>
+</ul>
+</li>
+</ul>
+<h3 id="hardware-minimum-requirements">Hardware minimum requirements</h3>
+<table>
+<thead>
+<tr>
+<th>Operating System</th>
+<th>Linux</th>
+<th>Windows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAM</td>
+<td>Minimum 100MB usable. Need more than 100MB if you have more than ~200 songs (500KB per one song)</td>
+<td>Minimum 100MB usable. Need more than 100MB if you have more than ~500 songs (200KB per one song)</td>
+</tr>
+<tr>
+<td>Architecture</td>
+<td>x86_64</td>
+<td>x86_64</td>
+</tr>
+<tr>
+<td>Other</td>
+<td>Internet access</td>
+<td>Internet access</td>
+</tr>
+</tbody>
+</table>
+<p>The requirements download/instructions are listed in the <a href="https://raw.githubusercontent.com/pepershukov/ytm-yld/main/requirements.txt"><code>requirements.txt</code></a> in addition to Python pip packages needed with this project.</p>
+<h2 id="usage">Usage</h2>
+<pre><code>ytm-yld (--<span class="hljs-keyword">help</span>) [--cookie ...] (--ffmpeg ...) (--output ...) (--<span class="hljs-keyword">mode</span> ...) (--json ...) (--config ...)
+
+[...] - required arguments
+(...) - optional arguments
+Further information <span class="hljs-keyword">on</span> requirements can <span class="hljs-keyword">be</span> found in the README.md.
+http<span class="hljs-variable">s:</span>//github.<span class="hljs-keyword">com</span>/pepershukov/ytm-yld#readme
+
+If the following arguments are not passed, the application will request them when necessary.
+And <span class="hljs-keyword">if</span> they fail <span class="hljs-keyword">to</span> validate within the app, the application will <span class="hljs-keyword">throw</span> <span class="hljs-keyword">an</span> error.
+Argument<span class="hljs-variable">s:</span>
+    --<span class="hljs-keyword">help</span>          - shows this message <span class="hljs-built_in">and</span> exits
+
+    --cookie        - the absolute path <span class="hljs-keyword">to</span> <span class="hljs-keyword">file</span> of <span class="hljs-keyword">a</span> YouTube.<span class="hljs-keyword">com</span> cookie <span class="hljs-keyword">as</span> <span class="hljs-keyword">a</span> <span class="hljs-string">'Netscape HTTP Cookie File'</span>
+
+    --ffmpeg        - (Windows) the absolute path <span class="hljs-keyword">to</span> FFmpeg folder
+                    - (Linux) the absolute path <span class="hljs-keyword">to</span> FFmpeg <span class="hljs-keyword">file</span> binary
+                    - <span class="hljs-keyword">only</span> necessary <span class="hljs-keyword">if</span> you are <span class="hljs-keyword">to</span> select <span class="hljs-string">'d'</span> <span class="hljs-keyword">mode</span>
+
+    --output        - the absolute path <span class="hljs-keyword">to</span> folder where you want your music(synced/downloaded)/playlist-<span class="hljs-keyword">to</span>-text <span class="hljs-keyword">file</span>
+
+    --<span class="hljs-keyword">mode</span>          - <span class="hljs-keyword">mode</span> (t|d|s|<span class="hljs-keyword">m</span>|<span class="hljs-keyword">j</span>) <span class="hljs-keyword">to</span> request <span class="hljs-keyword">for</span> the application <span class="hljs-keyword">to</span> <span class="hljs-built_in">complete</span>
+
+    --json          - the absolute path <span class="hljs-keyword">to</span> <span class="hljs-keyword">an</span> existing JSON playlist data <span class="hljs-keyword">file</span> instead of downloading
+
+    --config        - the absolute path <span class="hljs-keyword">to</span> the config <span class="hljs-keyword">file</span> containing section `ytm-yld`
+                    - see http<span class="hljs-variable">s:</span>//github.<span class="hljs-keyword">com</span>/pepershukov/ytm-yld#config <span class="hljs-keyword">for</span> quickstart
+</code></pre><p><em>If you choose not to pass the arguments, you will have to enter the paths upon the application input request.</em></p>
+<p><em>(Update: <a href="https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0">#1.1.0+</a>)</em> <strong>If the paths turn out to be invalid or non-existant, or the file formatting is wrong, the application will throw out an error.</strong></p>
+<h2 id="quickstart">Quickstart</h2>
+<p>You will be asked upon starting the application to select the mode of your choice.<br><em>(Update: <a href="https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0">#2.0.0+</a>)</em> As there is <strong>no &#39;all&#39; mode</strong>, you can <strong>stack the modes together</strong> with an input request; for example, if I would want to go through all the modes, I will write <code>tdsjm</code> <em>(order of items does not matter)</em> as the mode of my choice. Similarly, if I would want two specific modes - download &amp; sync - I will write <code>ds</code> <em>(again, order of items does not matter)</em>; and so on.</p>
+<p><strong>There are currently four modes:</strong></p>
+<ul>
+<li><strong>Playlist-to-text (<code>t</code>)</strong><ul>
+<li>Saves the songs&#39; information to a text file as a table</li>
+</ul>
+</li>
+<li><strong>Download (<code>d</code>)</strong><ul>
+<li>Downloads the songs that the application finds not existing locally</li>
+</ul>
+</li>
+<li><strong>Sync (<code>s</code>)</strong> <em>(Update: <a href="https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0">#2.0.0+</a>)</em><ul>
+<li>Deletes songs stored locally that have been removed from the playlist</li>
+</ul>
+</li>
+<li><strong>JSON (<code>j</code>)</strong> <em>(Update: <a href="https://github.com/pepershukov/ytm-yld/releases/tag/v3.0.0">#3.0.0+</a>)</em><ul>
+<li>Does not delete the JSON metadata of the playlist - mainly for advanced users to play around with it</li>
+</ul>
+</li>
+<li><strong>Manual (<code>m</code>)</strong> <em>(Update: <a href="https://github.com/pepershukov/ytm-yld/releases/tag/v4.0.0">#4.0.0+</a>)</em><ul>
+<li>Gives a choice of songs to download to the user - therefore you have to input songs you want to download manually</li>
+</ul>
+</li>
+</ul>
+<h2 id="config">Config</h2>
+<p>You can pass the config file in the arguments under the <code>--config</code> tag instead of passing all other arguments you need. Config files otherwise could be used to automate the application start further or make its use easier. Further is a quickstart to the config file format.</p>
+<ul>
+<li>The application uses an <code>.ini</code>-like format</li>
+<li>All the variables regarding the application have to be under sector <code>ytm-yld</code><ul>
+<li>The application will throw an error and exit if this fails</li>
+</ul>
+</li>
+<li>The variable names are the same as argument tags</li>
+<li>The values of the variables must not be empty</li>
+<li>Not all variables have to be passed<ul>
+<li>You still can pass the arguments for variables that are not in the config file</li>
+</ul>
+</li>
+</ul>
+<p>Here is an <strong>example</strong> of a <strong>full config file</strong>:</p>
+<pre><code><span class="hljs-section">[ytm-yld]</span>
+<span class="hljs-attr">cookie</span> = <span class="hljs-string">'absolute/path/to/cookie'</span>
+<span class="hljs-attr">ffmpeg</span> = <span class="hljs-string">'absolute/path/to/ffmpeg'</span>
+<span class="hljs-attr">output</span> = <span class="hljs-string">'absolute/path/to/output'</span>
+<span class="hljs-attr">mode</span> = <span class="hljs-string">'tdsjm'</span>
+<span class="hljs-attr">json</span> = <span class="hljs-string">'absolute/path/to/json'</span>
+</code></pre><h2 id="building-an-executable">Building an executable</h2>
+<p>This further guide is mainly for developers, trying to either test their code or to experiment with the results of their contribution to this project. It will show you how to build an executable out of a Python project.</p>
+<ol>
+<li>Download and install <a href="https://python.org">Python</a> <em>(if not already)</em><br>1.1 <strong>(Windows)</strong> During install, make sure to check <code>Add Python x.x.x to PATH</code>. Otherwise, <a href="https://datatofish.com/add-python-to-windows-path/">add Python and scripts to PATH manually</a>.</li>
+<li>Download and install <a href="https://git-scm.com/downloads">git-scm</a> <em>(if not already)</em></li>
+<li>Run this command in the Terminal (copy &amp; paste &amp; Enter):<blockquote>
+<p><strong>Windows:</strong></p>
+<pre><code>git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/pepershukov/y</span>tm-yld.git %userprofile%<span class="hljs-regexp">/Downloads/y</span>tm-yld &amp;&amp; ^
+cd %userprofile%<span class="hljs-regexp">/Downloads/y</span>tm-yld &amp;&amp; ^
+python -m pip install -U -r requirements.txt &amp;&amp; ^
+pyinstaller --name ytm-yld_windows --onefile --workpath .<span class="hljs-regexp">/temp --distpath ./</span> --hidden-import=yt_dlp.compat._legacy main.py &amp;&amp; ^
+rmdir <span class="hljs-regexp">/s /</span>q temp &amp;&amp; ^
+del <span class="hljs-regexp">/s /</span>q ytm-yld_windows.spec
+</code></pre><p><strong>Linux:</strong> </p>
+<pre><code>git <span class="hljs-built_in">clone</span> https://github.com/pepershukov/ytm-yld.git ~/Downloads/ytm-yld; \
+<span class="hljs-built_in">cd</span> ~/Downloads/ytm-yld; \
+<span class="hljs-built_in">alias</span> python=<span class="hljs-string">'python3'</span>; \
+<span class="hljs-built_in">export</span> PATH=<span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.local/bin:<span class="hljs-variable">$PATH</span>"</span>; \
+python -m pip install -U -r requirements.txt; \
+pyinstaller --name ytm-yld_linux --onefile --workpath ./temp --distpath ./ --hidden-import=yt_dlp.compat._legacy main.py; \
+rm -r temp; \
+rm ytm-yld_linux.spec
+</code></pre></blockquote>
+</li>
+<li>You will find your executable as <code>ytm-yld_linux</code> <em>(Linux)</em> or <code>ytm-yld_windows.exe</code> <em>(Windows)</em></li>
+</ol>
