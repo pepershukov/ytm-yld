@@ -80,7 +80,7 @@ Arguments:
 def logwrite(string):
     print ('[LOG] {}'.format(string))  # prints LOG stdout
     with open(path_log, 'a') as file:
-        file.write('[[LOG] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as LOG
+        file.write('[LOG] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as LOG
 
 def errorwrite(string, exit = 0):
     with open(path_log, 'a') as file:
