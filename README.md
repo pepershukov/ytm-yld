@@ -18,6 +18,9 @@ Instructions per version may differ, so **if you are looking for instructions on
 **The latest release of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
 
 ## Download
+
+**The latest release of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
+
 | Operating System | Link                                                                                | Size              | SHA256                                                           |
 |------------------|-------------------------------------------------------------------------------------|-------------------|------------------------------------------------------------------|
 | Linux            | https://github.com/pepershukov/ytm-yld/releases/download/v5.0.0/ytm-yld_linux       | 18.0MB (18883064) | 143EBDE29ACCE63631BAFE4D7FA5CFB1452A452194E7CC73AA84CCDD3AD1E675 |
