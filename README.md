@@ -15,8 +15,6 @@
 
 Instructions per version may differ, so **if you are looking for instructions on previous versions, look into a specific version tag accordingly.**
 
-**The latest release of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
-
 ## Download
 
 **The latest release of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
