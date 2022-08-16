@@ -65,8 +65,8 @@ def process_songs(max_song_num):
                 main.logwrite('Saving #{} MP3...'.format(counter))
                 local_song.save()
 
-                main.logwrite('Moving #{} ({}) song to "{}"...'.format(counter,
-                            remote_song['title'], main.path_song))
+                main.logwrite('Moving #{} ({}) ({}) song to "{}"...'.format(counter,
+                            remote_song['title'], remote_song['id'], main.path_song))
                 try:
                     os.rename(full_mp3_file, '{}/{}.mp3'.format(main.path_song,
                         remote_song['title']))

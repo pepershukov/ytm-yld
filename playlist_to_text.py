@@ -4,6 +4,7 @@
 
 import main
 import tabulate
+import codecs
 
 
 table = []
@@ -28,7 +29,13 @@ for remote_song in main.json_data['entries']: # parsing through JSON data
     counter += 1
 
 main.logwrite('Opening a text file...')
-with open('{}/songs_info.txt'.format(main.path_song), 'w') as file:
-    main.logwrite('Writing parsed data to text file...')
-    file.write(tabulate.tabulate(table, ['', 'Title', 'Artist', 'Album'],
-               tablefmt='presto'))
+try:
+    with open('{}/songs_info.txt'.format(main.path_song), 'w') as file:
+        main.logwrite('Writing parsed data to text file...')
+        file.write(tabulate.tabulate(table, ['', 'Title', 'Artist', 'Album'],
+                tablefmt='presto'))
+except:
+    with codecs.open('{}/songs_info.txt'.format(main.path_song), 'w', 'utf-16') as file:
+        main.logwrite('Writing parsed data to text file...')
+        file.write(tabulate.tabulate(table, ['', 'Title', 'Artist', 'Album'],
+                tablefmt='presto'))

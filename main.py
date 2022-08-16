@@ -79,12 +79,20 @@ Arguments:
 # Handlers
 def logwrite(string):
     print ('[LOG] {}'.format(string))  # prints LOG stdout
-    with open(path_log, 'a') as file:
-        file.write('[LOG] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as LOG
+    try:
+        with open(path_log, 'a') as file:
+            file.write('[LOG] [{}] {}\n'.format(datetime.datetime.now(), string)) # writes stdout to file as LOG
+    except:
+        with codecs.open(path_log, 'a', 'utf-16') as file:
+            file.write('[LOG] [{}] {}\n'.format(datetime.datetime.now(), string))
 
 def errorwrite(string, exit = 0):
-    with open(path_log, 'a') as file:
-        file.write('[ERROR] [{}] {}\n'.format(datetime.datetime.now(), string))  # writes stdout to file as ERROR
+    try:
+        with open(path_log, 'a') as file:
+            file.write('[ERROR] [{}] {}\n'.format(datetime.datetime.now(), string)) # writes stdout to file as ERROR
+    except:
+        with codecs.open(path_log, 'a', 'utf-16') as file:
+            file.write('[ERROR] [{}] {}\n'.format(datetime.datetime.now(), string))
     if not exit:
         print ('[ERROR] {} Exiting...'.format(string))  # prints ERROR stdout
         sys.exit() # exits app
@@ -168,15 +176,17 @@ if not path_cookie:
         path_cookie = input('[INPUT] Enter the absolute path to YouTube.com "Netscape HTTP Cookie File": '
                             ) # if not passed, ask the user for one
 if os.path.isfile(path_cookie):  # checks if cookie file is existing
-    with open(path_cookie, 'r') as file:
-        data = file.readlines()[0]
-        if not '# Netscape HTTP Cookie File' in data \
-            or '# HTTP Cookie File' in data:  # checks for vaild formatting of a cookie file as depicted by yt-dlp
-            errorwrite('Invalid formatting of a YouTube.com cookie file. Look into \'README.md\' under \'Requirements\' for instructions.'
-                       )
+    try:
+        file = open(path_cookie, 'r')
+    except:
+        file = codecs.open(path_cookie, 'r', 'utf-16')
+    data = file.readlines()[0]
+    if not '# Netscape HTTP Cookie File' in data \
+        or '# HTTP Cookie File' in data:  # checks for vaild formatting of a cookie file as depicted by yt-dlp
+        errorwrite('Invalid formatting of a YouTube.com cookie file. Look into \'requirements.txt\' under \'YouTube cookie\' for instructions.')
+    file.close()
 else:
-    errorwrite('Invalid or non-existant YouTube.com cookie file path.'
-               )
+    errorwrite('Invalid or non-existant YouTube.com cookie file path.')
 
 
 # Main programm
@@ -200,7 +210,7 @@ if __name__ == '__main__':
     os.chdir(path_main)
     logwrite('Downloading a JSON metadata playlist file...')
 
-    if '--json' not in sys.argv or 'json' not in config:
+    if '--json' not in sys.argv and 'json' not in config:
         # os.system('cd "{}" & yt-dlp --cookies="{}" -i -J -- https://music.youtube.com/playlist?list=LM > metadata.json'.format(path_main, path_cookie))
         with yt_dlp.YoutubeDL({
             'cookiefile': path_cookie,
@@ -208,9 +218,14 @@ if __name__ == '__main__':
             'dump_single_json': True,
             'ignoreerrors': True,
             }) as ydl:
-            with open(path_json, 'w') as file:
-                json.dump(ydl.sanitize_info(ydl.extract_info('https://music.youtube.com/playlist?list=LM'
-                        , download=False)), file)  # writing playlist data to JSON file
+            try:
+                with open(path_json, 'w') as file:
+                    json.dump(ydl.sanitize_info(ydl.extract_info('https://music.youtube.com/playlist?list=LM'
+                            , download=False)), file)  # writing playlist data to JSON file
+            except:
+                with codecs.open(path_json, 'w', 'utf-16') as file:
+                    json.dump(ydl.sanitize_info(ydl.extract_info('https://music.youtube.com/playlist?list=LM'
+                            , download=False)), file)
 
 logwrite('Opening a JSON metadata playlist file...')
 try:

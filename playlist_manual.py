@@ -13,14 +13,11 @@ table = []
 counter = 1
 for song in main.json_data['entries']: # parse through songs in playlist metadata
     if song: # if the song is valid on YouTube.com
-        # song_info = [*counter*, *Title*, Author, Album]
         song_info = [counter, song['title']] # create a table of details for the song
-        # song_info = [counter, Title, *Author*, Album]
         if 'creator' in song.keys():
             song_info.append(song['creator'])
         else: # if no author found in song metadata
             song_info.append('') # enter it as empty
-        # song_info = [counter, Title, Author, *Album*]
         if 'album' in song.keys():
             song_info.append(song['album'])
         else: # if no album found in song metadata
