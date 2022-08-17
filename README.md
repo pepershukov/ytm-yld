@@ -26,6 +26,8 @@ Instructions per version may differ, so **if you are looking for instructions on
 
 ## Requirements
 
+The requirements download/instructions are listed in the [`requirements.txt`](https://raw.githubusercontent.com/pepershukov/ytm-yld/main/requirements.txt) in addition to Python pip packages needed with this project.
+
 ### Software requirements
 - ***YouTube.com* cookie as a "Netscape HTTP Cookie File"**
   - *This application does not store/send the cookies for the use outside of this application.*
@@ -38,8 +40,6 @@ Instructions per version may differ, so **if you are looking for instructions on
 | RAM              | Minimum 100MB usable. Need more than 100MB if you have more than ~200 songs (500KB per one song) | Minimum 100MB usable. Need more than 100MB if you have more than ~500 songs (200KB per one song) |
 | Architecture     | x86_64                                                                                           | x86_64                                                                                           |
 | Other            | Internet access                                                                                  | Internet access                                                                                  |
-
-The requirements download/instructions are listed in the [`requirements.txt`](https://raw.githubusercontent.com/pepershukov/ytm-yld/main/requirements.txt) in addition to Python pip packages needed with this project.
 
 ## Usage
 
