@@ -117,6 +117,7 @@ if '--config' in sys.argv:
 
     if 'json' in config:
         path_json = config['json']
+        sys.argv.append('--json')
     else:
         path_json = ''
 
@@ -210,7 +211,7 @@ if __name__ == '__main__':
     os.chdir(path_main)
     logwrite('Downloading a JSON metadata playlist file...')
 
-    if '--json' not in sys.argv and 'json' not in config:
+    if '--json' not in sys.argv:
         # os.system('cd "{}" & yt-dlp --cookies="{}" -i -J -- https://music.youtube.com/playlist?list=LM > metadata.json'.format(path_main, path_cookie))
         with yt_dlp.YoutubeDL({
             'cookiefile': path_cookie,

@@ -135,8 +135,7 @@ def download_songs(manual = False, playlist_items = ''):
         main.logwrite('Removing "{}"...'.format(main.path_temp))
         os.rmdir(main.path_temp)
     except:
-        main.errorwrite("Couldn't remove the temporary directory. Continuing...", 1
-                        )
+        main.errorwrite("Couldn't remove the temporary directory.", 1)
 
     if continue_ok: # if FFmpeg binary exists, continue with downloading
         main.logwrite('Making "{}"...'.format(main.path_temp))
