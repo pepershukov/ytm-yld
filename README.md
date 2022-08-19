@@ -21,8 +21,8 @@ Instructions per version may differ, so **if you are looking for instructions on
 
 | Operating System | Link | Size | SHA256 |
 |---|---|---|---|
-| Linux | https://github.com/pepershukov/ytm-yld/releases/download/v5.1.0/ytm-yld_linux | 18.0MB (18930208) | B8521ACA9387C14CD7ABEFBD35855DF0D8CFA766B8B24E2E8F73B6899B129F78 |
-| Windows | https://github.com/pepershukov/ytm-yld/releases/download/v5.1.0/ytm-yld_windows.exe | 14.6MB (15409521) | 2F4836CA997142403568D79BCF9808E76BA9FD386DD07A672DBEE616FC23D0FF |
+| Linux | https://github.com/pepershukov/ytm-yld/releases/download/v5.1.0/ytm-yld_linux | 18.1MB (18930208) | B8521ACA9387C14CD7ABEFBD35855DF0D8CFA766B8B24E2E8F73B6899B129F78 |
+| Windows | https://github.com/pepershukov/ytm-yld/releases/download/v5.1.0/ytm-yld_windows.exe | 14.7MB (15409521) | 2F4836CA997142403568D79BCF9808E76BA9FD386DD07A672DBEE616FC23D0FF |
 
 ## Requirements
 
