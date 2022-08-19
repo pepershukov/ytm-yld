@@ -3,6 +3,7 @@ tabulate
 yt-dlp
 pyinstaller
 PILLOW
+pynput
 
 # FFmpeg
 # Windows: https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z

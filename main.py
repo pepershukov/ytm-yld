@@ -11,6 +11,7 @@ import json
 import codecs
 import platform
 import configparser
+import pynput.keyboard
 
 
 if platform.system() == 'Linux':
@@ -76,6 +77,8 @@ Arguments:
                     - see https://github.com/pepershukov/ytm-yld#config for quickstart""".format(exec_name))
     sys.exit()
 
+
+# Initialization
 # Handlers
 def logwrite(string):
     print ('[LOG] {}'.format(string))  # prints LOG stdout
@@ -99,6 +102,11 @@ def errorwrite(string, exit = 0):
     else:
         print ('[ERROR] {} Continuing...'.format(string))  # prints ERROR stdout
 
+# Defining and adding a listener
+def on_press(key):  # on-press listener
+    if key == pynput.keyboard.Key.insert:  # if user pressed <Insert>
+        os._exit(0)  # exit completely
+pynput.keyboard.Listener(on_press=on_press).start()  # starting on-press listener
 
 # Paths
 if '--config' in sys.argv:
