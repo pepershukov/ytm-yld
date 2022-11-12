@@ -1,13 +1,12 @@
 # pip packages
 tabulate
 yt-dlp
-pyinstaller
 PILLOW
-pynput
 
-# FFmpeg
-# Windows: https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z
-# Linux https://ffmpeg.org/download.html#build-linux
+## FFmpeg (Linux ONLY)
+# https://ffmpeg.org/download.html#build-linux
+## FFmpeg - Source code
+# https://ffmpeg.org/download.html#get-sources
 
 # YouTube.com "Netscape HTTP Cookie File"
 # https://github.com/ytdl-org/youtube-dl/blob/master/README.md#how-do-i-pass-cookies-to-youtube-dl

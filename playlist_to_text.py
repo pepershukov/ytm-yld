@@ -2,40 +2,42 @@
 # -*- coding: utf-8 -*-
 
 
+# Imports
 import main
 import tabulate
 import codecs
+import logging
 
 
+# Core
 table = []
-counter = 1
-for remote_song in main.json_data['entries']: # parsing through JSON data
-    if remote_song: # checking current song for validity
-        info = [counter, remote_song['title']]
-        if 'creator' in remote_song.keys():
-            info.append(remote_song['creator'])
+for counter, song in enumerate(main.json_data, start=1): # parsing through JSON data
+    if song: # checking current song for validity
+        info = [counter, song['id'], song['title']]
+        if 'creator' in song.keys():
+            info.append(song['creator'])
         else:
             info.append('')
-        if 'album' in remote_song.keys():
-            info.append(remote_song['album'])
+        if 'album' in song.keys():
+            info.append(song['album'])
         else:
             info.append('')
     else:
-        main.errorwrite('Song #{} is invalid on YouTube.com.'.format(counter), 1)
+        logging.warning(f'Song #{counter} is invalid on YouTube.com.')
         continue
     table.append(info)
-    main.logwrite('Added entry #{}/{}'.format(counter,
-                  len(main.json_data['entries'])))
-    counter += 1
+    logging.debug(f"Added entry #{counter}/{len(main.json_data)}")
 
-main.logwrite('Opening a text file...')
+logging.debug('Opening a text file...')
 try:
-    with open('{}/songs_info.txt'.format(main.path_song), 'w') as file:
-        main.logwrite('Writing parsed data to text file...')
-        file.write(tabulate.tabulate(table, ['', 'Title', 'Artist', 'Album'],
-                tablefmt='presto'))
+    with open(f"{main.path_song}/songs_info.txt", 'w') as file:
+        logging.debug('Writing parsed data to text file...')
+        file.write(tabulate.tabulate(table, 
+                                     ['', 'YouTube ID', 'Title', 'Artist', 'Album'],
+                                     tablefmt='presto'))
 except:
-    with codecs.open('{}/songs_info.txt'.format(main.path_song), 'w', 'utf-16') as file:
-        main.logwrite('Writing parsed data to text file...')
-        file.write(tabulate.tabulate(table, ['', 'Title', 'Artist', 'Album'],
-                tablefmt='presto'))
+    with codecs.open(f"{main.path_song}/songs_info.txt", 'w', 'utf-16') as file:
+        logging.debug('Writing parsed data to text file...')
+        file.write(tabulate.tabulate(table, 
+                                     ['', 'Title', 'YouTube ID', 'Artist', 'Album'],
+                                     tablefmt='presto'))
