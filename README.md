@@ -21,11 +21,13 @@ Instructions per version may differ, so **if you are looking for instructions on
 
 ## Download
 
-**Current version: [v6.1.0](https://github.com/pepershukov/ytm-yld/releases/tag/v6.1.0)**
+**Current version: [v7.0.0](https://github.com/pepershukov/ytm-yld/releases/tag/v7.0.0)**
 
 **The latest release of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
 
-# TODO: DOWNLOAD TABLE
+| **Operating System** |                                **Download Link**                                |          **Size**         |                         **Hash - SHA216**                        |
+|:--------------------:|:-------------------------------------------------------------------------------:|:-------------------------:|:----------------------------------------------------------------:|
+|        Windows       | https://github.com/pepershukov/ytm-yld/releases/download/v7.0.0/ytm-yld_win.exe | 45.2MB (47,458,178 Bytes) | 6C321DAF4B3547763AF87E7F4CFDD40DC4938EA07688297030F03329E3D5F54D |
 
 &nbsp;
 
@@ -37,10 +39,10 @@ The requirements download/instructions are listed in the [`requirements.txt`](ht
 - ***YouTube.com* cookie as a "Netscape HTTP Cookie File"**
   - See [`requirements.txt`](https://raw.githubusercontent.com/pepershukov/ytm-yld/main/requirements.txt) for help.
 
-_**[FFmpeg](https://ffmpeg.org/)** is no longer required as it is bundled with the executable._  _(Update: [#6.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v6.1.0))_
+_**[FFmpeg](https://ffmpeg.org/)** is no longer required as it is bundled with the executable._  _(Update: [#7.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v7.0.0))_
 
 ### Hardware minimum requirements
-_**Linux is no longer supported** due to the incosistencies present._ _(Update: [#6.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v6.1.0))_
+_**Linux is no longer supported** due to the incosistencies present._ _(Update: [#7.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v7.0.0))_
 - **Operating System** - Windows 8+
 - **RAM** - minimum 100MB usable
 - **Architecture** - x86_64
