@@ -74,7 +74,7 @@ Arguments:
 
 **Make sure that the files within the output folder are desired for this application only. Otherwise, they could be at risk of deletion or corruption when 'downloading' or 'syncing'.**
 
-*If you choose not to pass the arguments, you will have to enter the paths upon the application input request.*
+If you choose not to pass the arguments, you will have to enter the paths upon the application input request.
 
 _([1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ **If the paths turn out to be invalid or non-existant, or the file formatting is wrong, ~the application will throw out an error~** _([6.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v6.0.0))_ **the application will ask for them recursively untill success.**
 
