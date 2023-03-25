@@ -8,7 +8,6 @@ import glob
 import os
 import logging
 
-
 # Core
 def sync():
     if not glob.glob(f"{main.path_song}/*.mp3"):

@@ -11,10 +11,8 @@ import glob # working with files + core
 import os
 import main
 import yt_dlp
-import logging
-import platform
 import shutil
-
+import logging
 
 # Song processing
 def process_songs(max_song_num):
@@ -55,12 +53,12 @@ def process_songs(max_song_num):
         song = mutagen.mp3.MP3(full_mp3_file,ID3=mutagen.id3.ID3)
         logging.debug("Adding album art to MP3 metadata...")
         song.tags.add(mutagen.id3.APIC(mime='image/jpeg',
-                            type=3, desc=u'Cover',
-                            data=open(f"{main.path_temp}/{song_id}.jpg", 'rb').read()))
+                                       type=3, desc=u'Cover',
+                                       data=open(f"{main.path_temp}/{song_id}.jpg", 'rb').read()))
         logging.debug("Saving MP3...")
         song.save()
 
-        logging.debug(f"Moving {song_id} ({song_data['title']})...")
+        logging.debug(f"Moving {song_id}...")
         os.rename(full_mp3_file, f"{main.path_song}/{song_id}.mp3")
 
     logging.debug(f"Changing current working directory to '{main.path_main}'...")
@@ -80,19 +78,12 @@ def download_songs(manual = False, playlist_items = ''):
     logging.debug(f"Changing current working directory to '{main.path_temp}'...")
     os.chdir(main.path_temp)
 
-    # check for FFmpeg validity (Linux)
-    if platform.system() == 'Linux':
-        while not os.path.isfile(main.path_ffmpeg):
-            logging.error('FFmpeg binary is non-existant or not passed.')
-            logging.debug('Asking for FFmpeg binary...')
-            main.path_ffmpeg = input("[INPUT] Enter the absolute path to FFmpeg binary:\n> ")
-
             
     # Downloader
     if not manual:
         if not glob.glob(f"{main.path_song}/*.mp3"): # if no songs are present locally
-            max_song_num = len(main.json_data)
-            logging.info(f"Downloading all ({len(main.json_data)}) songs...")
+            max_song_num = len(main.songs_data)
+            logging.info(f"Downloading all ({len(main.songs_data)}) songs...")
             with yt_dlp.YoutubeDL({
                 'ignoreerrors': True,
                 'cookiefile': main.path_cookie,
@@ -101,25 +92,28 @@ def download_songs(manual = False, playlist_items = ''):
                 'ffmpeg_location': main.path_ffmpeg,
                 'outtmpl': '%(id)s',
                 'postprocessors': [{'key': 'FFmpegExtractAudio',
-                                'preferredcodec': 'mp3'}]}) as ydl:
+                                    'preferredcodec': 'mp3'}]}) as ydl:
                 ydl.download('https://music.youtube.com/playlist?list=LM') # downloading handler
             process_songs(max_song_num)
 
         else: # if some songs are present, udgrade to find more
             logging.debug('Looking into which songs to download...')
-            songs = os.listdir(main.path_song)
-            for max_song_num, entry in enumerate(main.json_data): # iterate through (length of playlist, songs stored locally)
-                if entry: # check for song validity on YouTube.com
-                    if f"{entry['id']}.mp3" in songs:
-                        break
+            songs = [i.rsplit(os.sep, 1)[1][:i.rsplit(os.sep, 1)[1].find('.mp3')] for i in glob.glob(f"{main.path_song}/*.mp3")] # get all existing song ids
+            downloadurls = []
+            for id in main.songs_data:
+                if id not in songs:
+                    downloadurls.append(f"https://music.youtube.com/watch?v={id}")
             
-            if max_song_num == 0: # if there are no new songs to download, exit applciation
+            if len(downloadurls) == 0: # if there are no new songs to download, exit applciation
+                logging.debug(f"Changing current working directory to '{main.path_main}'...")
+                os.chdir(main.path_main)
+                logging.debug(f"Removing '{main.path_temp}'...")
+                shutil.rmtree(main.path_temp, ignore_errors=True)
                 return
-            
+
             else:
-                logging.info(f"Downloading {max_song_num} songs...")
+                logging.info(f"Downloading {len(downloadurls)} songs...")
                 with yt_dlp.YoutubeDL({
-                    'playlistend': max_song_num,
                     'ignoreerrors': True,
                     'cookiefile': main.path_cookie,
                     'nowarnings': True,
@@ -128,8 +122,8 @@ def download_songs(manual = False, playlist_items = ''):
                     'outtmpl': '%(id)s',
                     'postprocessors': [{'key': 'FFmpegExtractAudio',
                                         'preferredcodec': 'mp3'}]}) as ydl:
-                    ydl.download('https://music.youtube.com/playlist?list=LM') # download handler
-                process_songs(max_song_num)
+                    ydl.download(downloadurls) # download handler
+                process_songs(len(downloadurls))
 
     else: # if called by the playlist_manual module
         max_song_num = 0

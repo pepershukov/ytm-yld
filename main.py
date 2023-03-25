@@ -15,16 +15,21 @@ import logging
 import tempfile
 import signal
 import shutil
+import time
+import inspect
+import distro
 
+start = time.perf_counter() # time variable for benchmarking
 
-if (platform.system() != 'Linux') and (platform.system() != 'Windows'):
+if platform.system() != 'Windows':
     raise Exception("""Your system is not supported.
 Please report this message with your system details via an Issue on the project\'s GitHub page, and possible I will try to bundle an app for it:
 https://github.com/pepershukov/ytm-yld/issues""")
 
 if '--help' in sys.argv or '-h' in sys.argv: # print help message and exit
     if platform.system() == 'Windows':
-        print("""ytm-yld_windows.exe (--help|-h) [--cookie <path>] (--output <folder path>) (--mode ...) (--json <path>) (--config <path>)
+        name = 'ytm-yld_win.exe'
+    print(f"""{name} (--help|-h) [--cookie <path>] (--output <folder path>) (--mode ...) (--json <path>) (--config <path>)
 
 [...] - required arguments
 (...) - optional arguments
@@ -40,32 +45,6 @@ Arguments:
     
     --output        - the absolute path to folder where you want your music(synced/downloaded)/playlist-to-text file
     
-    --mode          - mode (t|d|s|m|j) to request for the application to complete
-
-    --json          - the absolute path to an existing JSON playlist data file instead of downloading
-
-    --config        - the absolute path to the config file containing section `ytm-yld`
-                    - see https://github.com/pepershukov/ytm-yld#config for quickstart""")
-    elif platform.system() == 'Linux':
-        print("""ytm-yld_linux (--help|-h) [--cookie <path>] (--ffmpeg <path>) (--output <folder path>) (--mode ...) (--json <path>) (--config <path>)
-
-[...] - required arguments
-(...) - optional arguments
-Further information on requirements can be found in the README.md.
-https://github.com/pepershukov/ytm-yld#readme
-
-If the following arguments are not passed, the application will request them when necessary.
-And if they fail to validate within the app, the application will throw an error.
-Arguments:
-    --help | -h     - shows this message and exits
-
-    --cookie        - the absolute path to file of a YouTube.com cookie as a 'Netscape HTTP Cookie File'
-
-    --ffmpeg        - the absolute path to FFmpeg file binary
-                    - only necessary if you are to select 'd' mode
-
-    --output        - the absolute path to folder where you want your music(synced/downloaded)/playlist-to-text file
-
     --mode          - mode (t|d|s|m|j) to request for the application to complete
 
     --json          - the absolute path to an existing JSON playlist data file instead of downloading
@@ -76,6 +55,29 @@ Arguments:
 
 
 # Initialization
+def exit_handler(signal=None, frame=None):
+    logging.info('Interrupted. Cleaning up...')
+    # cleaning temporary files
+    try:
+        logging.debug(f"Changing current working directory to '{path_main}'")
+        os.chdir(path_main)
+        logging.debug(f"Removing '{path_temp}'...")
+        shutil.rmtree(path_temp, ignore_errors=True)
+    except:
+        pass
+    
+    # cleaning metadata.json
+    if ('--json' not in sys.argv) and ('j' not in mode):
+        logging.debug(f"Removing '{path_json}'...")
+        try:
+            os.remove(path_json)
+        except:
+            pass
+    
+    logging.debug(f'Execution time: {time.perf_counter() - start} seconds')
+    os._exit(0)
+signal.signal(signal.SIGINT, exit_handler) # start exit_handler
+
 if __name__ == '__main__':
     # remove temp log file
     try:
@@ -83,25 +85,34 @@ if __name__ == '__main__':
     except FileNotFoundError:
         pass
 
-logger = logging.getLogger() # ininitiate logging
-logger.setLevel(logging.DEBUG)
+    logger = logging.getLogger() # main logger
+    logger.propagate = False
+    logger.setLevel(logging.DEBUG)
 
-formatter = logging.Formatter("[%(datetime)s] [%(levelname)s] [%(module)s %(lineno)d] %(message)s")
-old_factory = logging.getLogRecordFactory()
-def record_factory(*args, **kwargs):
-    record = old_factory(*args, **kwargs)
-    record.datetime = str(datetime.datetime.now())
-    return record
-logging.setLogRecordFactory(record_factory)
+    formatter = logging.Formatter("[%(datetime)s] [%(levelname)s] [%(module)s %(lineno)d] %(message)s")
+    old_factory = logging.getLogRecordFactory()
+    def record_factory(*args, **kwargs):
+        record = old_factory(*args, **kwargs)
+        record.datetime = str(datetime.datetime.now())
+        return record
+    logging.setLogRecordFactory(record_factory)
 
-fh = logging.FileHandler(f"{tempfile.gettempdir()}/ytm-yld.log.txt") # add handler to file
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-logger.addHandler(fh)
-sh = logging.StreamHandler() # add handler to STDOUT
-sh.setLevel(logging.DEBUG)
-sh.setFormatter(formatter)
-logger.addHandler(sh)
+    fh = logging.FileHandler(f"{tempfile.gettempdir()}/ytm-yld.log.txt") # add handler to file
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+    sh = logging.StreamHandler() # add handler to STDOUT
+    sh.setLevel(logging.DEBUG)
+    sh.setFormatter(formatter)
+    logger.addHandler(sh)
+
+def loginput(inputstr): # custom input log
+    with open(f"{tempfile.gettempdir()}/ytm-yld.log.txt", 'a') as file:
+        stack = inspect.stack()[1]
+        record = f"[{datetime.datetime.now()}] [INPUT] [{str(inspect.getmodule(stack[0]).__name__).replace('_', '')} {stack[2]}] {inputstr}"
+        result = input(f"{record}:\n> ")
+        file.write(f"{record}\n[{datetime.datetime.now()}] [INPUT RECIEVED] [{str(inspect.getmodule(stack[0]).__name__).replace('_', '')} {stack[2]}] {result}\n")
+        return result
 
 # Paths
 if '--config' in sys.argv:
@@ -126,13 +137,6 @@ if '--config' in sys.argv:
         sys.argv.append('--json')
     else:
         path_json = ''
-
-    logging.debug("Looking into the 'ffmpeg' parameter...")
-    if 'ffmpeg' in config:
-        logging.debug("Setting the 'ffmpeg' variable... (config)")
-        path_ffmpeg = config['ffmpeg']
-    else:
-        path_ffmpeg = ''
 
     logging.debug("Looking into the 'cookie' parameter...")
     if 'cookie' in config:
@@ -165,15 +169,7 @@ def resource_path(relative_path):
 
 path_main = os.path.abspath(os.path.dirname(__file__))
 path_log = f"{tempfile.gettempdir()}/ytm-yld.log.txt"
-
-logging.debug("Setting the 'ffmpeg' variable... (args)")
-if platform.system() == 'Linux':
-    if not path_ffmpeg:
-        if '--ffmpeg' in sys.argv: # if FFmpeg folder passed in arguments
-            path_ffmpeg = sys.argv[sys.argv.index('--ffmpeg') + 1]
-        else:
-            logging.warning('FFmpeg path not passed in args.') # if not passed, handle an error
-elif platform.system() == 'Windows':
+if platform.system() == 'Windows':
     path_ffmpeg = resource_path('ffmpeg/')
 
 logging.debug("Setting the 'output' variable... (args)")
@@ -208,36 +204,15 @@ while True:
         if not ('# Netscape HTTP Cookie File' in data \
                 or '# HTTP Cookie File' in data): # checks for vaild formatting of a cookie file as depicted by yt-dlp
             logging.error("Invalid formatting of a YouTube.com cookie file. Look into 'requirements.txt' under 'YouTube cookie' for instructions.")
-            logging.debug('Asking for new cookie path...')
-            path_cookie = input('[INPUT] Enter the absolute path to YouTube.com "Netscape HTTP Cookie File":\n> ')
+            path_cookie = loginput('Enter the absolute path to YouTube.com "Netscape HTTP Cookie File"')
             continue
         else:
             break
     else:
         logging.error('Invalid or non-existant YouTube.com cookie file path.')
-        logging.debug('Asking for new cookie path...')
-        path_cookie = input('[INPUT] Enter the absolute path to YouTube.com "Netscape HTTP Cookie File":\n> ')
+        path_cookie = loginput('Enter the absolute path to YouTube.com "Netscape HTTP Cookie File"')
         continue
 
-# Exit handler
-def exit_handler(signal=None, frame=None):
-    logging.info('Interrupted. Cleaning up...')
-    # cleaning temporary files
-    logging.debug(f"Changing current working directory to '{path_main}'")
-    os.chdir(path_main)
-    logging.debug(f"Removing '{path_temp}'...")
-    shutil.rmtree(path_temp, ignore_errors=True)
-
-    # cleaning metadata.json
-    if '--json' not in sys.argv:
-        logging.debug(f"Removing '{path_json}'...")
-        try:
-            os.remove(path_json)
-        except:
-            pass
-    
-    os._exit(0)
-signal.signal(signal.SIGINT, exit_handler)
 
 # Main programm
 if __name__ == '__main__':
@@ -249,9 +224,11 @@ if __name__ == '__main__':
         if '--mode' in sys.argv:
             mode = sys.argv[sys.argv.index('--mode') + 1]
     while not ('t' in mode or 'd' in mode or 's' in mode or 'm' in mode or 'j' in mode):
-        logging.error(f"Unknown mode '{mode}' chosen. Please select from (t|d|s|m|j).")
-        logging.debug('Asking for a new mode...')
-        mode = input('[INPUT] playlist-to-text/donwload/sync/manual/json? (t|d|s|m|j):\n> ')
+        if mode != '':
+            logging.error(f"Unknown mode '{mode}' chosen. Please select from (t|d|s|m|j).")
+        else:
+            logging.error(f"No mode chosen. Please select from (t|d|s|m|j).")
+        mode = loginput('playlist-to-text/donwload/sync/manual/json? (t|d|s|m|j)')
 
     logging.debug(f"Changing current working directory to '{path_main}'...")
     os.chdir(path_main)
@@ -281,7 +258,7 @@ except:
         logging.debug('Loading dictionary from JSON file...')
         json_data = json.load(file)
 json_data = json_data['entries']
-songs_data = {i['id']:i for i in json_data if i}
+songs_data = {i['id'] : i for i in json_data if i}
 
 if __name__ == '__main__':
     if 't' in mode:
@@ -307,15 +284,15 @@ if __name__ == '__main__':
             os.remove(path_json)
         except:
             pass
-
+    
     print('\n')
-    logging.info('Execution finished.')
+    logging.info(f'Execution finished. Execution time: {time.perf_counter() - start} seconds')
     logging.info(f"The log file is at '{path_log}'.")
 
     if 'j' in mode:
         logging.info(f"Your playlist metadata as a JSON formatted file is available in '{path_json}'.")
     if 't' in mode:
-        logging.info(f"Your parsed playlist information is available in '{path_song}/songs_info.txt'.")
+        logging.info(f"Your parsed playlist information is available in '{path_song}/songs_info.txt'.")       
     if json_data: # check if there are liked songs
         if 's' in mode:
             logging.info(f"Your songs have been synchronised in '{path_song}'.")
