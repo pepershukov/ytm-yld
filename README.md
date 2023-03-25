@@ -37,10 +37,10 @@ The requirements download/instructions are listed in the [`requirements.txt`](ht
 - ***YouTube.com* cookie as a "Netscape HTTP Cookie File"**
   - See [`requirements.txt`](https://raw.githubusercontent.com/pepershukov/ytm-yld/main/requirements.txt) for help.
 
-_**[FFmpeg](https://ffmpeg.org/)** is no longer required as it is bundled with the executable._  _(Update: [#7.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v7.0.0))_
+_**[FFmpeg](https://ffmpeg.org/)** is no longer required as it is bundled with the executable._  _([7.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v7.0.0))_
 
 ### Hardware minimum requirements
-_**Linux is no longer supported** due to the incosistencies present._ _(Update: [#7.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v7.0.0))_
+_**Linux is no longer supported** due to the inconsistencies present._ _([7.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v7.0.0))_
 - **Operating System** - Windows 8+
 - **RAM** - minimum 100MB usable
 - **Architecture** - x86_64
@@ -76,7 +76,7 @@ Arguments:
 
 *If you choose not to pass the arguments, you will have to enter the paths upon the application input request.*
 
-_(Update: [#1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ **If the paths turn out to be invalid or non-existant, or the file formatting is wrong, ~the application will throw out an error~** _(Update: [#6.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v6.0.0))_ **the application will ask for them recursively untill success.**
+_([1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ **If the paths turn out to be invalid or non-existant, or the file formatting is wrong, ~the application will throw out an error~** _([6.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v6.0.0))_ **the application will ask for them recursively untill success.**
 
 &nbsp;
 
@@ -84,18 +84,18 @@ _(Update: [#1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))
 
 ### Modes
 You will be asked upon starting the application to select the mode of your choice.  
-_(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))_ As there is **no 'all' mode**, you can **stack the modes together** with an input request; for example, if I would want to go through all the modes, I will write `tdsjm` _(order of items does not matter)_ as the mode of my choice. Similarly, if I would want two specific modes - download & sync - I will write `ds` _(again, order of items does not matter)_; and so on.
+_([2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))_ As there is **no 'all' mode**, you can **stack the modes together** with an input request; for example, if I would want to go through all the modes, I will write `tdsjm` _(order of items does not matter)_ as the mode of my choice. Similarly, if I would want two specific modes - download & sync - I will write `ds` _(again, order of items does not matter)_; and so on.
 
 **There are currently five modes:**
 - **Playlist-to-text (`t`)**
   - Saves the songs' information to a text file as a table
 - **Download (`d`)**
   - Downloads the songs that the application finds not existing locally
-- **Sync (`s`)** _(Update: [#2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))_
+- **Sync (`s`)** _([2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))_
   - Deletes songs stored locally that have been removed from the playlist
-- **JSON (metadata) (`j`)** _(Update: [#3.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v3.0.0))_
+- **JSON (metadata) (`j`)** _([3.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v3.0.0))_
   - Does not delete the JSON metadata of the playlist - mainly for advanced users to play around with it
-- **Manual (`m`)** _(Update: [#4.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v4.0.0))_
+- **Manual (`m`)** _([4.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v4.0.0))_
   - Gives a choice of songs to download to the user - therefore you have to input songs you want to download manually
 
 ### Config
