@@ -1,7 +1,7 @@
-# **YouTube Music - 'Your Likes' Downloader**
+# **YTMusic - 'Your Likes' Downloader**
 ## A downloader of your all-time favourite playlist for autonomous listening
 
-**YouTube Music - 'Your Likes' Downloader** or else **ytm-yld**, is a **command-line/terminal utility** used to either download or parse your favourite songs from YouTube Music.
+**YTMusic - 'Your Likes' Downloader** or else **ytm-yld**, is a **command-line/terminal utility** used to either download or parse your favourite songs from YouTube Music.
 
 ***
 
@@ -11,7 +11,8 @@
 - Deleting songs that have been removed from the playlist
 - Downloading playlist metadata as a JSON formatted file
 - Format the songs in the playlist to a text file
-- Downloading only the songs that you want 
+- Downloading only the songs that you want
+- Downloading lyrics for songs
 
 Instructions per version may differ, so **if you are looking for instructions on previous versions, look into a specific version tag or commit accordingly.**
 
@@ -19,19 +20,19 @@ Instructions per version may differ, so **if you are looking for instructions on
 
 ## Download
 
-**Current version: [v7.0.0](https://github.com/pepershukov/ytm-yld/releases/tag/v7.0.0)**
+**Current version: [v8.0.0](https://github.com/pepershukov/ytm-yld/releases/tag/v8.0.0)**
 
 **The latest release of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
 
 | **Operating System** |                                **Download Link**                                |          **Size**         |                         **Hash - SHA216**                        |
 |:--------------------:|:-------------------------------------------------------------------------------:|:-------------------------:|:----------------------------------------------------------------:|
-|        Windows       | https://github.com/pepershukov/ytm-yld/releases/download/v7.0.0/ytm-yld_win.exe | 45.2MB (47,458,178 Bytes) | 6C321DAF4B3547763AF87E7F4CFDD40DC4938EA07688297030F03329E3D5F54D |
+|        Windows       | https://github.com/pepershukov/ytm-yld/releases/download/v8.0.0/ytm-yld_win.exe | 45.8MB (48,028,238 Bytes) | F9A7B8DA62936D82CC868A9E8E74D1A00F3D72287D35A71F59E1F0BFE9EE4CA1 |
 
 &nbsp;
 
 ## Requirements
 
-The requirements download/instructions are listed in the [`requirements.txt`](https://raw.githubusercontent.com/pepershukov/ytm-yld/main/requirements.txt) in addition to Python pip packages needed with this project.
+The requirements download/instructions are listed in the [`requirements.txt`](https://github.com/pepershukov/ytm-yld/blob/main/requirements.txt) in addition to Python pip packages needed with this project.
 
 ### Software requirements
 - ***YouTube.com* cookie as a "Netscape HTTP Cookie File"**
@@ -50,41 +51,51 @@ _**Linux is no longer supported** due to the inconsistencies present._ _([7.0.0+
 ## Usage
 
 ```
-ytm-yld (--help | -h) [--cookie <path>] (--output <folder path>) (--mode ...) (--json <path>) (--config <path>)
+usage: ytm-yld [-h] [--version] [--config [file]] [--cookie [file]] [--output [folder]] [--mode [... ...]] [--json [file]]
+               [--songs-json [file]] [--no-title [id,id...]] [--no-artist [id,id...]] [--no-album [id,id...]]
+               [--no-cover [id,id...]] [--no-lyrics [id,id...]]
 
-[...] - required arguments
-(...) - optional arguments
+A command-line downloader of YouTube Music - 'Your Likes' playlist
 
-If the following arguments are not passed, the application will request them when necessary.
-If they fail to validate, the application will recursively ask for them until success.
-Arguments:
-    --help | -h     - shows this message and exits
+options:
+  -h, --help            show this help message and exit
+  --version, -v         show program's version number and exit
 
-    --cookie        - the absolute path to file of a YouTube.com cookie as a 'Netscape HTTP Cookie File'
-    
-    --output        - the absolute path to folder where you want your music (synced/downloaded)/playlist-to-text file
-    
-    --mode          - mode (t|d|s|m|j) to request for the application to complete
-    
-    --json          - the absolute path to an existing JSON playlist data file instead of downloading
-    
-    --config        - the absolute path to the config file containing section `ytm-yld`
-                    - see https://github.com/pepershukov/ytm-yld#config for quickstart
+General options:
+  --config [file]       absolute path to config file containing sector 'ytm-yld'
+  --cookie [file]       absolute path to YouTube.com cookie as a 'Netscape HTTP Cookie File'
+  --output [folder]     absolute path to folder where you want your music synced/download/playlist-to-text file
+  --mode [... ...]      mode (t|d|s|m|j) to request for the application to complete
+  --json [file]         absolute path to existing JSON playlist metadata file instead of downloading
+  --songs-json [file]   absolute path to existing JSON songs metadata file instead of downloading
+
+Music metadata options:
+  For these, it can act as a global parameter for all songs if no specific IDs are passed.
+
+  --no-title [id,id...]
+                        whether to include the title of the songs or not
+  --no-artist [id,id...]
+                        whether to include the artist of the songs or not
+  --no-album [id,id...]
+                        whether to include the album name of the songs or not
+  --no-cover [id,id...]
+                        whether to include the album art/cover of the songs or not
+  --no-lyrics [id,id...]
+                        whether to include the lyrics of the songs or not
 ```
 
 **Make sure that the files within the output folder are desired for this application only. Otherwise, they could be at risk of deletion or corruption when 'downloading' or 'syncing'.**
 
 If you choose not to pass the arguments, you will have to enter the paths upon the application input request.
 
-_([1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ **If the paths turn out to be invalid or non-existant, or the file formatting is wrong, ~the application will throw out an error~** _([6.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v6.0.0))_ **the application will ask for them recursively untill success.**
+_([1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ **If the paths turn out to be invalid or non-existant, or the file formatting is wrong, ~the application will throw out an error~** _([6.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v6.0.0))_ **the application will ask for them recursively until success.**
 
 &nbsp;
 
 ## Quickstart
 
 ### Modes
-You will be asked upon starting the application to select the mode of your choice.  
-_([2.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v2.0.0))_ As there is **no 'all' mode**, you can **stack the modes together** with an input request; for example, if I would want to go through all the modes, I will write `tdsjm` _(order of items does not matter)_ as the mode of my choice. Similarly, if I would want two specific modes - download & sync - I will write `ds` _(again, order of items does not matter)_; and so on.
+You will be asked upon starting the application to select the mode of your choice.
 
 **There are currently five modes:**
 - **Playlist-to-text (`t`)**
@@ -116,4 +127,11 @@ cookie = 'absolute/path/to/cookie'
 output = 'absolute/path/to/output'
 mode = 'tdsjm'
 json = 'absolute/path/to/json'
+songs-json = 'absolute/path/to/json'
+
+no-title = [True]
+no-artist = [True]
+no-cover = [True]
+no-album = [True]
+no-lyrics = [True]
 ```

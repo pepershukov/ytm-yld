@@ -2,7 +2,7 @@
 tabulate
 yt-dlp
 PILLOW
-distro
+ytmusicapi
 
 ## FFmpeg - Source code
 # https://ffmpeg.org/download.html#get-sources

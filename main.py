@@ -17,7 +17,8 @@ import signal
 import shutil
 import time
 import inspect
-import distro
+import argparse
+import ytmusicapi
 
 start = time.perf_counter() # time variable for benchmarking
 
@@ -26,51 +27,53 @@ if platform.system() != 'Windows':
 Please report this message with your system details via an Issue on the project\'s GitHub page, and possible I will try to bundle an app for it:
 https://github.com/pepershukov/ytm-yld/issues""")
 
-if '--help' in sys.argv or '-h' in sys.argv: # print help message and exit
-    if platform.system() == 'Windows':
-        name = 'ytm-yld_win.exe'
-    print(f"""{name} (--help|-h) [--cookie <path>] (--output <folder path>) (--mode ...) (--json <path>) (--config <path>)
-
-[...] - required arguments
-(...) - optional arguments
-Further information on requirements can be found in the README.md.
-https://github.com/pepershukov/ytm-yld#readme
-
-If the following arguments are not passed, the application will request them when necessary.
-And if they fail to validate within the app, the application will throw an error.
-Arguments:
-    --help | -h     - shows this message and exits
-
-    --cookie        - the absolute path to file of a YouTube.com cookie as a 'Netscape HTTP Cookie File'
-    
-    --output        - the absolute path to folder where you want your music(synced/downloaded)/playlist-to-text file
-    
-    --mode          - mode (t|d|s|m|j) to request for the application to complete
-
-    --json          - the absolute path to an existing JSON playlist data file instead of downloading
-
-    --config        - the absolute path to the config file containing section `ytm-yld`
-                    - see https://github.com/pepershukov/ytm-yld#config for quickstart""")
-    sys.exit()
 
 
 # Initialization
+argparser = argparse.ArgumentParser(prog='ytm-yld',
+                                    description="A command-line downloader of YouTube Music - 'Your Likes' playlist",
+                                    epilog="If some fail to validate, the application will recursively ask for them until success.",
+                                    add_help=True,
+                                    allow_abbrev=False)
+argparser.add_argument('--version', '-v', action='version', version='v8.0.0')
+
+general_group = argparser.add_argument_group("General options")
+general_group.add_argument('--config', action='store', nargs='?', default='', type=str, metavar='file', dest='path_config', help="absolute path to config file containing sector 'ytm-yld'")
+general_group.add_argument('--cookie', action='store', nargs='?', default='', type=str, metavar='file', dest='path_cookie', help="absolute path to YouTube.com cookie as a 'Netscape HTTP Cookie File'")
+general_group.add_argument('--output', action='store', nargs='?', default='', type=str, metavar='folder', dest='path_song', help="absolute path to folder where you want your music synced/download/playlist-to-text file")
+general_group.add_argument('--mode', action='store', nargs='*', choices=['t', 'd', 's', 'm', 'j'], default='', type=str, metavar='...', dest='mode', help="mode (t|d|s|m|j) to request for the application to complete")
+general_group.add_argument('--json', action='store', nargs='?', default='', type=str, metavar='file', dest='path_json', help="absolute path to existing JSON playlist metadata file instead of downloading")
+general_group.add_argument('--songs-json', action='store', nargs='?', default='', type=str, metavar='file', dest='path_songs_json', help="absolute path to existing JSON songs metadata file instead of downloading")
+
+music_group = argparser.add_argument_group("Music metadata options", "For these, it can act as a global parameter for all songs if no specific IDs are passed.")
+music_group.add_argument('--no-title', action='store', nargs='?', type=str, const=[True], default=[], metavar='id,id...', dest='no_title', help="whether to include the title of the songs or not")
+music_group.add_argument('--no-artist', action='store', nargs='?', type=str, const=[True], default=[], metavar='id,id...', dest='no_artist', help="whether to include the artist of the songs or not")
+music_group.add_argument('--no-album', action='store', nargs='?', type=str, const=[True], default=[], metavar='id,id...', dest='no_album', help="whether to include the album name of the songs or not")
+music_group.add_argument('--no-cover', action='store', nargs='?', type=str, const=[True], default=[], metavar='id,id...', dest='no_cover', help="whether to include the album art/cover of the songs or not")
+music_group.add_argument('--no-lyrics', action='store', nargs='?', type=str, const=[True], default=[], metavar='id,id...', dest='no_lyrics', help="whether to include the lyrics of the songs or not")
+
+
 def exit_handler(signal=None, frame=None):
     logging.info('Interrupted. Cleaning up...')
     # cleaning temporary files
     try:
-        logging.debug(f"Changing current working directory to '{path_main}'")
+        logging.debug(f"Changing current working directory to [{path_main}]...")
         os.chdir(path_main)
-        logging.debug(f"Removing '{path_temp}'...")
+        logging.debug(f"Removing [{path_temp}]...")
         shutil.rmtree(path_temp, ignore_errors=True)
     except:
         pass
     
     # cleaning metadata.json
-    if ('--json' not in sys.argv) and ('j' not in mode):
-        logging.debug(f"Removing '{path_json}'...")
+    if 'j' not in mode:
+        logging.debug(f"Removing [{path_json}]...")
         try:
             os.remove(path_json)
+        except:
+            pass
+        logging.debug(f"Removing [{path_songs_json}]...")
+        try:
+            os.remove(path_songs_json)
         except:
             pass
     
@@ -78,6 +81,8 @@ def exit_handler(signal=None, frame=None):
     os._exit(0)
 signal.signal(signal.SIGINT, exit_handler) # start exit_handler
 
+
+# Logging + custom input 
 if __name__ == '__main__':
     # remove temp log file
     try:
@@ -114,51 +119,69 @@ def loginput(inputstr): # custom input log
         file.write(f"{record}\n[{datetime.datetime.now()}] [INPUT RECIEVED] [{str(inspect.getmodule(stack[0]).__name__).replace('_', '')} {stack[2]}] {result}\n")
         return result
 
+
 # Paths
-if '--config' in sys.argv:
-    logging.debug('Looking into a config file...')
+logging.debug('Setting paths and variables...')
+logging.debug('Loading command-line arguments...')
+args = argparser.parse_args()
+logging.debug("Setting [config] variable... (args)")
+path_config = args.path_config
+logging.debug("Setting [cookie] variable... (args)")
+path_cookie = args.path_cookie
+logging.debug("Setting [output] variable... (args)")
+path_song = args.path_song
+logging.debug("Setting [mode] variable... (args)")
+mode = args.mode
+logging.debug("Setting [json] variable... (args)")
+path_json = args.path_json
+logging.debug("Setting [songs-json] variable... (args)")
+path_songs_json = args.path_songs_json
+logging.debug("Setting [no-title] variable... (args)")
+no_title = args.no_title.split(',') if type(args.no_title) != list else args.no_title
+logging.debug("Setting [no-artist] variable... (args)")
+no_artist = args.no_artist.split(',') if type(args.no_artist) != list else args.no_artist
+logging.debug("Setting [no-album] variable... (args)")
+no_album = args.no_album.split(',') if type(args.no_album) != list else args.no_album
+logging.debug("Setting [no-cover] variable... (args)")
+no_cover = args.no_cover.split(',') if type(args.no_cover) != list else args.no_cover
+logging.debug("Setting [no-lyrics] variable... (args)")
+no_lyrics = args.no_lyrics.split(',') if type(args.no_lyrics) != list else args.no_lyrics
+if path_config:
+    logging.debug('Setting a config file...')
     config = configparser.ConfigParser()
-    config.read(sys.argv[sys.argv.index('--config') + 1])
+    config.read(path_config)
     config = config['ytm-yld']
-
-    logging.debug("Looking into the 'output' parameter...")
-    if 'output' in config:
-        logging.debug("Setting the 'output' variable... (config)")
-        path_song = config['output']
-        path_temp = f"{config['output']}/temp"
-    else:
-        path_song = ''
-        path_temp = ''
-
-    logging.debug("Looking into the 'json' parameter...")
-    if 'json' in config:
-        logging.debug("Setting the 'json' variable... (config)")
-        path_json = config['json']
-        sys.argv.append('--json')
-    else:
-        path_json = ''
-
-    logging.debug("Looking into the 'cookie' parameter...")
-    if 'cookie' in config:
-        logging.debug("Setting the 'cookie' variable... (config)")
-        path_cookie = config['cookie']
-    else:
-        path_cookie = ''
-
-    logging.debug("Looking into the 'mode' parameter...")
-    if 'mode' in config:
-        logging.debug("Setting the 'mode' variable... (config)")
-        mode = config['mode']
-    else:
-        mode = ''
-
-else:
-    path_song = ''
-    path_temp = ''
-    path_json = ''
-    path_ffmpeg = ''
-    path_cookie = ''
-    mode = ''
+    for param in config.keys():
+        if 'output' == param and path_song == '':
+            logging.debug("Setting [output] variable... (config)")
+            path_song = config['output']
+        elif 'json' == param and path_json == '':
+            logging.debug("Setting [json] variable... (config)")
+            path_json = config['json']
+        elif 'songs-json' == param and path_songs_json == '':
+            logging.debug("Setting [songs-json] variable... (config)")
+            path_songs_json = config['songs-json']
+        elif 'cookie' == param and path_cookie == '':
+            logging.debug("Setting [cookie] variable... (config)")
+            path_cookie = config['cookie']
+        elif 'mode' == param and mode == '':
+            logging.debug("Setting [mode] variable... (config)")
+            mode = config['mode']
+        elif 'no-title' == param and not no_title:
+            logging.debug("Setting [no-title] variable... (config)")
+            no_title = config['no-title']
+        elif 'no-artist' == param and not no_artist:
+            logging.debug("Setting [no-artist] variable... (config)")
+            no_artist = config['no-artist']
+        elif 'no-album' == param and not no_album:
+            logging.debug("Setting [no-album] variable... (config)")
+            no_album = config['no-album']
+        elif 'no-cover' == param and not no_cover:
+            logging.debug("Setting [no-cover] variable... (config)")
+            no_cover = config['no-cover']
+        elif 'no-lyrics' == param and not no_lyrics:
+            logging.debug("Setting [no-lyrics] variable... (config)")
+            no_lyrics = config['no-lyrics']
 
 def resource_path(relative_path):
     try:
@@ -172,28 +195,51 @@ path_log = f"{tempfile.gettempdir()}/ytm-yld.log.txt"
 if platform.system() == 'Windows':
     path_ffmpeg = resource_path('ffmpeg/')
 
-logging.debug("Setting the 'output' variable... (args)")
 if not path_song:
-    if '--output' in sys.argv: # if output folder passed in arguments
-        # apply the output path passed in arguments to global variables
-        path_song = sys.argv[sys.argv.index('--output') + 1]
-        path_temp = f"{path_song}/temp"
-    else: # otherwise, apply default paths
-        path_song = f"{os.path.expanduser('~')}/Music/ytm-yld"
-        path_temp = f"{os.path.expanduser('~')}/Music/ytm-yld/temp"
+    path_song = f"{os.path.expanduser('~')}/Music/ytm-yld"
+    path_temp = f"{os.path.expanduser('~')}/Music/ytm-yld/_temp"
+else:
+    logging.debug("Validating [output] variable...")
+    while True:
+        if not os.path.isdir(path_song):
+            logging.error("Invalid or non-existant [output] folder.")
+            loginput("Enter the absolute path to an [output] folder")
+        else:
+            break
+    path_temp = f"{path_song}/_temp"
 
-logging.debug("Setting the 'json' variable... (args)")
+logging.debug("Validating [json] variable...")
 if not path_json:
-    if '--json' in sys.argv: # if JSON playlist metadata passed in arguments
-        path_json = sys.argv[sys.argv.index('--json') + 1]
-    else:
-        path_json = f"{path_song}/metadata.json"
+    json_arg = False
+    path_json = f"{path_song}/metadata.json"
+else:
+    while True:
+        if not os.path.isfile(path_json):
+            logging.error("Invalid or non-existant JSON playlist metadata file.")
+            path_json = loginput("Enter the absolute path to a JSON playlist metadata file")
+        else:
+            break
+    json_arg = True
 
-logging.debug("Setting the 'cookie' variable... (args)")
-if not path_cookie:
-    if '--cookie' in sys.argv:
-        path_cookie = sys.argv[sys.argv.index('--cookie') + 1]  # gets YouTube.com cookie path from arguments
+logging.debug("Validating [songs-json] variable...")
+if not path_songs_json:
+    songs_json_arg = False
+    path_songs_json = f"{path_song}/songs_metadata.json"
+else:
+    while True:
+        if not os.path.isfile(path_songs_json):
+            logging.error("Invalid or non-existant JSON songs metadata file.")
+            path_songs_json = loginput("Enter the absolute path to a JSON songs metadata file")
+        else:
+            break
+    songs_json_arg = True
+
+logging.debug("Validating [cookie] variable...")
 while True:
+    if not path_cookie:
+        path_cookie = loginput('Enter the absolute path to YouTube.com "Netscape HTTP Cookie File"')
+        continue
+    
     if os.path.isfile(path_cookie): # checks if cookie file is existing
         try:
             file = open(path_cookie, 'r')
@@ -213,28 +259,34 @@ while True:
         path_cookie = loginput('Enter the absolute path to YouTube.com "Netscape HTTP Cookie File"')
         continue
 
+def song_options(song_id):
+    options = {}
+    options['no-title'] = True if song_id in no_title or True in no_title else False
+    options['no-artist'] = True if song_id in no_artist or True in no_artist else False
+    options['no-album'] = True if song_id in no_album or True in no_album else False
+    options['no-cover'] = True if song_id in no_cover or True in no_cover else False
+    options['no-lyrics'] = True if song_id in no_lyrics or True in no_lyrics else False
+    return options
+
+
 
 # Main programm
 if __name__ == '__main__':
     os.makedirs(path_song, exist_ok=True)
-    logging.debug(f"Made \"{path_song}\".")
+    logging.debug(f"Made [{path_song}].")
 
-    logging.debug("Setting the 'mode' variable... (args)")
-    if not mode:
-        if '--mode' in sys.argv:
-            mode = sys.argv[sys.argv.index('--mode') + 1]
+    logging.debug("Validating [mode] variable... (args)")
     while not ('t' in mode or 'd' in mode or 's' in mode or 'm' in mode or 'j' in mode):
-        if mode != '':
-            logging.error(f"Unknown mode '{mode}' chosen. Please select from (t|d|s|m|j).")
+        if len(mode) != 0:
+            logging.error(f"Unknown mode [{mode}] chosen. Please select from [t|d|s|m|j].")
         else:
-            logging.error(f"No mode chosen. Please select from (t|d|s|m|j).")
-        mode = loginput('playlist-to-text/donwload/sync/manual/json? (t|d|s|m|j)')
+            logging.error(f"No mode chosen. Please select from [t|d|s|m|j].")
+        mode = loginput('playlist-to-text/donwload/sync/manual/json? [t|d|s|m|j]')
 
-    logging.debug(f"Changing current working directory to '{path_main}'...")
+    logging.debug(f"Changing current working directory to [{path_main}]...")
     os.chdir(path_main)
-    logging.debug('Downloading a JSON metadata playlist file...')
-
-    if '--json' not in sys.argv:
+    if not json_arg:
+        logging.debug('Downloading a JSON metadata playlist file...')
         with yt_dlp.YoutubeDL({
             'cookiefile': path_cookie,
             'no_warnings': True,
@@ -251,50 +303,76 @@ if __name__ == '__main__':
 logging.debug('Opening a JSON metadata playlist file...')
 try:
     with open(path_json, 'r') as file:
-        logging.debug('Loading dictionary from JSON file...')
+        logging.debug('Loading dictionary from JSON playlist metadata file...')
         json_data = json.load(file)
 except:
     with codecs.open(path_json, 'r', 'utf-16') as file:
-        logging.debug('Loading dictionary from JSON file...')
+        logging.debug('Loading dictionary from JSON playlist metadata file...')
         json_data = json.load(file)
-json_data = json_data['entries']
-songs_data = {i['id'] : i for i in json_data if i}
+songs_data = {i['id'] : i for i in json_data['entries'] if i}
+
+if __name__ == '__main__':
+    logging.debug("Downloading songs metadata...")
+    if not songs_json_arg:
+        remote_songs_data = {song : ytmusicapi.YTMusic().get_song(song) for song in songs_data}
+        try:
+            with open(path_songs_json, 'w') as file:
+                json.dump(remote_songs_data, file)
+        except:
+            with codecs.open(path_songs_json, 'w', 'utf-16') as file:
+                json.dump(remote_songs_data, file)
+
+if __name__ != '__main__':
+    logging.debug("Opening a JSON songs metadata file...")
+    try:
+        with open(path_songs_json, 'r') as file:
+            logging.debug("Loading dictionary from JSON songs metadata file...")
+            remote_songs_data = json.load(file)
+    except:
+        with codecs.open(path_songs_json, 'r', 'utf-16') as file:
+            logging.debug("Loading dictionary from JSON songs metadata file...")
+            remote_songs_data = json.load(file)
+    remote_songs_data = {i : remote_songs_data[i]['videoDetails'] for i in remote_songs_data}
+
 
 if __name__ == '__main__':
     if 't' in mode:
         import playlist_to_text
+        playlist_to_text.write_file(playlist_to_text.generate_table())
     if 's' in mode:
         import playlist_sync
         playlist_sync.sync()
-    if json_data: # check if there are liked songs
-        if 'm' in mode and 'd' in mode:
-            logging.info("Cannot execute 'download' mode - 'manual' mode chosen also.")
+    if songs_data: # check if there are liked songs
+        if 'm' in mode:
             import playlist_manual
-        else:
-            if 'd' in mode:
+            import playlist_downloader
+            playlist_downloader.download_songs(manual=True, playlist_items=playlist_manual.choose_songs())
+        elif 'd' in mode:
                 import playlist_downloader
                 playlist_downloader.download_songs()
-            if 'm' in mode:
-                import playlist_manual
     else:
         logging.warning("No songs to download.")
     if 'j' not in mode:
-        logging.debug(f"Removing '{path_json}'...")
         try:
+            logging.debug(f"Removing [{path_json}]...")
             os.remove(path_json)
+        except:
+            pass
+        try:
+            logging.debug(f"Removing [{path_songs_json}]...")
+            os.remove(path_songs_json)
         except:
             pass
     
     print('\n')
     logging.info(f'Execution finished. Execution time: {time.perf_counter() - start} seconds')
-    logging.info(f"The log file is at '{path_log}'.")
-
+    logging.info(f"The log file is at [{path_log}].")
     if 'j' in mode:
-        logging.info(f"Your playlist metadata as a JSON formatted file is available in '{path_json}'.")
+        logging.info(f"Your playlist metadata as a JSON formatted file is available in [{path_json}].")
     if 't' in mode:
-        logging.info(f"Your parsed playlist information is available in '{path_song}/songs_info.txt'.")       
+        logging.info(f"Your parsed playlist information is available in [{path_song}/songs_info.txt].")       
     if json_data: # check if there are liked songs
         if 's' in mode:
-            logging.info(f"Your songs have been synchronised in '{path_song}'.")
+            logging.info(f"Your songs have been synchronised in [{path_song}].")
         if 'm' in mode or 'd' in mode:
-            logging.info(f"Your downloaded songs are available in '{path_song}'.")
+            logging.info(f"Your downloaded songs are available in [{path_song}].")
