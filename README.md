@@ -123,15 +123,9 @@ You can pass the config file in the arguments under the `--config` argument inst
 Here is an **example** of a **full config file**:
 ```
 [ytm-yld]
-cookie = 'absolute/path/to/cookie'
-output = 'absolute/path/to/output'
-mode = 'tdsjm'
-json = 'absolute/path/to/json'
-songs-json = 'absolute/path/to/json'
-
-no-title = [True]
-no-artist = [True]
-no-cover = [True]
-no-album = [True]
-no-lyrics = [True]
+cookie = absolute/path/to/cookie
+output = absolute/path/to/output
+mode = tdsjm
+json = absolute/path/to/json
+songs-json = absolute/path/to/json
 ```
