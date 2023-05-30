@@ -13,6 +13,7 @@
 - Format the songs in the playlist to a text file
 - Downloading only the songs that you want
 - Downloading lyrics for songs
+- Excluding certain elements of song data from saving
 
 Instructions per version may differ, so **if you are looking for instructions on previous versions, look into a specific version tag or commit accordingly.**
 
@@ -20,13 +21,13 @@ Instructions per version may differ, so **if you are looking for instructions on
 
 ## Download
 
-**Current version: [v8.0.0](https://github.com/pepershukov/ytm-yld/releases/tag/v8.0.0)**
+**Current version: [v8.0.1](https://github.com/pepershukov/ytm-yld/releases/tag/v8.0.1)**
 
 **The latest release of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
 
-| **Operating System** |                                **Download Link**                                |          **Size**         |                         **Hash - SHA216**                        |
-|:--------------------:|:-------------------------------------------------------------------------------:|:-------------------------:|:----------------------------------------------------------------:|
-|        Windows       | https://github.com/pepershukov/ytm-yld/releases/download/v8.0.0/ytm-yld_win.exe | 45.8MB (48,028,238 Bytes) | F9A7B8DA62936D82CC868A9E8E74D1A00F3D72287D35A71F59E1F0BFE9EE4CA1 |
+| **Operating System** | **Download Link** | **Size** | **Hash - SHA216** |
+|:---:|:---:|:---:|:---:|
+| Windows | https://github.com/pepershukov/ytm-yld/releases/download/v8.0.1/ytm-yld_win.exe | 47.0MB (49375299) | 886E1DA5368AA457A3FE639FAA062DDFE8FE8CD2ECF75E344CCA7CFE7B30EE5B |
 
 &nbsp;
 
@@ -51,8 +52,8 @@ _**Linux is no longer supported** due to the inconsistencies present._ _([7.0.0+
 ## Usage
 
 ```
-usage: ytm-yld [-h] [--version] [--config [file]] [--cookie [file]] [--output [folder]] [--mode [... ...]] [--json [file]]
-               [--songs-json [file]] [--no-title [id,id...]] [--no-artist [id,id...]] [--no-album [id,id...]]
+usage: ytm-yld [-h] [--version] [--update] [--config [file]] [--cookie [file]] [--output [folder]] [--mode [... ...]]
+               [--json [file]] [--songs-json [file]] [--no-title [id,id...]] [--no-artist [id,id...]] [--no-album [id,id...]]
                [--no-cover [id,id...]] [--no-lyrics [id,id...]]
 
 A command-line downloader of YouTube Music - 'Your Likes' playlist
@@ -60,6 +61,7 @@ A command-line downloader of YouTube Music - 'Your Likes' playlist
 options:
   -h, --help            show this help message and exit
   --version, -v         show program's version number and exit
+  --update, -u          check for update and exit
 
 General options:
   --config [file]       absolute path to config file containing sector 'ytm-yld'
@@ -121,11 +123,20 @@ You can pass the config file in the arguments under the `--config` argument inst
   - You still can pass the arguments for variables that are not in the config file
 
 Here is an **example** of a **full config file**:
-```
+``` ini
 [ytm-yld]
 cookie = absolute/path/to/cookie
 output = absolute/path/to/output
 mode = tdsjm
 json = absolute/path/to/json
 songs-json = absolute/path/to/json
+
+# The music metadata options have two variants of working
+# 1. Selecting 'true' - shoosing it globally for all songs
+# 2. Selecting IDs in a list - MUST put DOUBLE SPEECH-MARKS!! - choosing songs seperately 
+no-title = ["1-iKwZKc7Ok"]
+no-artist = ["1-iKwZKc7Ok", "FXovf5dsRTw"]
+no-album = true
+no-cover = TRUE
+no-lyrics = True
 ```

@@ -19,6 +19,7 @@ import time
 import inspect
 import argparse
 import ytmusicapi
+import git
 
 start = time.perf_counter() # time variable for benchmarking
 
@@ -35,7 +36,8 @@ argparser = argparse.ArgumentParser(prog='ytm-yld',
                                     epilog="If some fail to validate, the application will recursively ask for them until success.",
                                     add_help=True,
                                     allow_abbrev=False)
-argparser.add_argument('--version', '-v', action='version', version='v8.0.0')
+argparser.add_argument('--version', '-v', action='version', version='v8.0.1')
+argparser.add_argument('--update', '-u', action='store_const', const=True, dest="update", help='check for update and exit')
 
 general_group = argparser.add_argument_group("General options")
 general_group.add_argument('--config', action='store', nargs='?', default='', type=str, metavar='file', dest='path_config', help="absolute path to config file containing sector 'ytm-yld'")
@@ -46,11 +48,11 @@ general_group.add_argument('--json', action='store', nargs='?', default='', type
 general_group.add_argument('--songs-json', action='store', nargs='?', default='', type=str, metavar='file', dest='path_songs_json', help="absolute path to existing JSON songs metadata file instead of downloading")
 
 music_group = argparser.add_argument_group("Music metadata options", "For these, it can act as a global parameter for all songs if no specific IDs are passed.")
-music_group.add_argument('--no-title', action='store', nargs='?', type=str, const=[True], default=[], metavar='id,id...', dest='no_title', help="whether to include the title of the songs or not")
-music_group.add_argument('--no-artist', action='store', nargs='?', type=str, const=[True], default=[], metavar='id,id...', dest='no_artist', help="whether to include the artist of the songs or not")
-music_group.add_argument('--no-album', action='store', nargs='?', type=str, const=[True], default=[], metavar='id,id...', dest='no_album', help="whether to include the album name of the songs or not")
-music_group.add_argument('--no-cover', action='store', nargs='?', type=str, const=[True], default=[], metavar='id,id...', dest='no_cover', help="whether to include the album art/cover of the songs or not")
-music_group.add_argument('--no-lyrics', action='store', nargs='?', type=str, const=[True], default=[], metavar='id,id...', dest='no_lyrics', help="whether to include the lyrics of the songs or not")
+music_group.add_argument('--no-title', action='store', nargs='?', type=str, const="true", default="", metavar='id,id...', dest='no_title', help="whether to include the title of the songs or not")
+music_group.add_argument('--no-artist', action='store', nargs='?', type=str, const="true", default="", metavar='id,id...', dest='no_artist', help="whether to include the artist of the songs or not")
+music_group.add_argument('--no-album', action='store', nargs='?', type=str, const="true", default="", metavar='id,id...', dest='no_album', help="whether to include the album name of the songs or not")
+music_group.add_argument('--no-cover', action='store', nargs='?', type=str, const="true", default="", metavar='id,id...', dest='no_cover', help="whether to include the album art/cover of the songs or not")
+music_group.add_argument('--no-lyrics', action='store', nargs='?', type=str, const="true", default="", metavar='id,id...', dest='no_lyrics', help="whether to include the lyrics of the songs or not")
 
 
 def exit_handler(signal=None, frame=None):
@@ -120,10 +122,18 @@ def loginput(inputstr): # custom input log
         return result
 
 
-# Paths
-logging.debug('Setting paths and variables...')
 logging.debug('Loading command-line arguments...')
 args = argparser.parse_args()
+
+if args.update == True:
+    latest_version = git.cmd.Git().ls_remote('https://github.com/pepershukov/ytm-yld', sort='-v:refname', tags=True).split('\n')[0].split('/')[-1].replace('^{}', '')
+    if latest_version != 'v8.0.1':
+        logging.info(f"An update is available [v8.0.1 -> {latest_version}]. You can look at the latest release and download here:\nhttps://github.com/pepershukov/ytm-yld/releases/latest")
+    else:
+        logging.info("You are running the latest version.")
+    os._exit(0)
+
+logging.debug('Setting paths and variables...')
 logging.debug("Setting [config] variable... (args)")
 path_config = args.path_config
 logging.debug("Setting [cookie] variable... (args)")
@@ -137,15 +147,15 @@ path_json = args.path_json
 logging.debug("Setting [songs-json] variable... (args)")
 path_songs_json = args.path_songs_json
 logging.debug("Setting [no-title] variable... (args)")
-no_title = args.no_title.split(',') if type(args.no_title) != list else args.no_title
+no_title = args.no_title.split(',')
 logging.debug("Setting [no-artist] variable... (args)")
-no_artist = args.no_artist.split(',') if type(args.no_artist) != list else args.no_artist
+no_artist = args.no_artist.split(',')
 logging.debug("Setting [no-album] variable... (args)")
-no_album = args.no_album.split(',') if type(args.no_album) != list else args.no_album
+no_album = args.no_album.split(',')
 logging.debug("Setting [no-cover] variable... (args)")
-no_cover = args.no_cover.split(',') if type(args.no_cover) != list else args.no_cover
+no_cover = args.no_cover.split(',')
 logging.debug("Setting [no-lyrics] variable... (args)")
-no_lyrics = args.no_lyrics.split(',') if type(args.no_lyrics) != list else args.no_lyrics
+no_lyrics = args.no_lyrics.split(',')
 if path_config:
     logging.debug('Setting a config file...')
     config = configparser.ConfigParser()
@@ -167,21 +177,22 @@ if path_config:
         elif 'mode' == param and mode == '':
             logging.debug("Setting [mode] variable... (config)")
             mode = config['mode']
-        elif 'no-title' == param and not no_title:
+        elif 'no-title' == param and no_title == ['']:
             logging.debug("Setting [no-title] variable... (config)")
-            no_title = config['no-title']
-        elif 'no-artist' == param and not no_artist:
+            no_title = str(config['no-title']).lower() if config['no-title'].lower() == 'true' else json.loads(config['no-title'])
+        elif 'no-artist' == param and no_artist == ['']:
             logging.debug("Setting [no-artist] variable... (config)")
-            no_artist = config['no-artist']
-        elif 'no-album' == param and not no_album:
+            no_artist = str(config['no-artist']).lower() if config['no-artist'].lower() == 'true' else json.loads(config['no-artist'])
+        elif 'no-album' == param and no_album == ['']:
             logging.debug("Setting [no-album] variable... (config)")
-            no_album = config['no-album']
-        elif 'no-cover' == param and not no_cover:
+            no_album = str(config['no-album']).lower() if config['no-album'].lower() == 'true' else json.loads(config['no-album'])
+        elif 'no-cover' == param and no_cover == ['']:
             logging.debug("Setting [no-cover] variable... (config)")
-            no_cover = config['no-cover']
-        elif 'no-lyrics' == param and not no_lyrics:
+            no_cover = str(config['no-cover']).lower() if config['no-cover'].lower() == 'true' else json.loads(config['no-cover'])
+        elif 'no-lyrics' == param and no_lyrics == ['']:
             logging.debug("Setting [no-lyrics] variable... (config)")
-            no_lyrics = config['no-lyrics']
+            no_lyrics = str(config['no-lyrics']).lower() if config['no-lyrics'].lower() == 'true' else json.loads(config['no-lyrics'])
+
 
 def resource_path(relative_path):
     try:
@@ -261,11 +272,11 @@ while True:
 
 def song_options(song_id):
     options = {}
-    options['no-title'] = True if song_id in no_title or True in no_title else False
-    options['no-artist'] = True if song_id in no_artist or True in no_artist else False
-    options['no-album'] = True if song_id in no_album or True in no_album else False
-    options['no-cover'] = True if song_id in no_cover or True in no_cover else False
-    options['no-lyrics'] = True if song_id in no_lyrics or True in no_lyrics else False
+    options['no-title'] = True if song_id in no_title or "true" in no_title else False
+    options['no-artist'] = True if song_id in no_artist or "true" in no_artist else False
+    options['no-album'] = True if song_id in no_album or "true" in no_album else False
+    options['no-cover'] = True if song_id in no_cover or "true" in no_cover else False
+    options['no-lyrics'] = True if song_id in no_lyrics or "true" in no_lyrics else False
     return options
 
 
@@ -314,7 +325,10 @@ songs_data = {i['id'] : i for i in json_data['entries'] if i}
 if __name__ == '__main__':
     logging.debug("Downloading songs metadata...")
     if not songs_json_arg:
-        remote_songs_data = {song : ytmusicapi.YTMusic().get_song(song) for song in songs_data}
+        remote_songs_data = {}
+        for counter, song in enumerate(songs_data, start=1):
+            logging.debug(f"Doing #{counter}/{len(songs_data)}...")
+            remote_songs_data[song] = ytmusicapi.YTMusic().get_song(song)
         try:
             with open(path_songs_json, 'w') as file:
                 json.dump(remote_songs_data, file)
@@ -346,7 +360,7 @@ if __name__ == '__main__':
         if 'm' in mode:
             import playlist_manual
             import playlist_downloader
-            playlist_downloader.download_songs(manual=True, playlist_items=playlist_manual.choose_songs())
+            playlist_downloader.download_songs(playlist_items=playlist_manual.choose_songs())
         elif 'd' in mode:
                 import playlist_downloader
                 playlist_downloader.download_songs()

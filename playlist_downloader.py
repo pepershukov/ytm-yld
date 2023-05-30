@@ -94,7 +94,11 @@ def process_songs(max_song_num):
                 song.save()
 
         logging.debug(f"Moving [{song_id}]...")
-        os.rename(full_mp3_file, f"{main.path_song}/{song_id}.mp3")
+        try:
+            os.rename(full_mp3_file, f"{main.path_song}/{song_id}.mp3")
+        except FileExistsError:
+            os.remove(f"{main.path_song}/{song_id}.mp3")
+            os.rename(full_mp3_file, f"{main.path_song}/{song_id}.mp3")
 
     logging.debug(f"Changing current working directory to [{main.path_main}]...")
     os.chdir(main.path_main)
