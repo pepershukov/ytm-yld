@@ -132,7 +132,7 @@ json = absolute/path/to/json
 songs-json = absolute/path/to/json
 
 # The music metadata options have two variants of working
-# 1. Selecting 'true' - shoosing it globally for all songs
+# 1. Selecting 'true' - choosing it globally for all songs
 # 2. Selecting IDs in a list - MUST put DOUBLE SPEECH-MARKS!! - choosing songs seperately 
 no-title = ["1-iKwZKc7Ok"]
 no-artist = ["1-iKwZKc7Ok", "FXovf5dsRTw"]
