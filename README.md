@@ -21,13 +21,13 @@ Instructions per version may differ, so **if you are looking for instructions on
 
 ## Download
 
-**Current version: [v8.0.1](https://github.com/pepershukov/ytm-yld/releases/tag/v8.0.1)**
+**Current version: [v8.0.2](https://github.com/pepershukov/ytm-yld/releases/tag/v8.0.2)**
 
 **The latest release of this application can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
 
 | **Operating System** | **Download Link** | **Size** | **Hash - SHA216** |
 |:---:|:---:|:---:|:---:|
-| Windows | https://github.com/pepershukov/ytm-yld/releases/download/v8.0.1/ytm-yld_win.exe | 47.0MB (49375299) | 886E1DA5368AA457A3FE639FAA062DDFE8FE8CD2ECF75E344CCA7CFE7B30EE5B |
+| Windows | https://github.com/pepershukov/ytm-yld/releases/download/v8.0.2/ytm-yld_win.exe | 47.5MB (49868710) | 6D2AA9BEC512F5626BBAE4CD80EBD4F853974D5E71DA4476DB63147347B9550C |
 
 &nbsp;
 
