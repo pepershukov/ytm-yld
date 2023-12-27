@@ -1,12 +1,11 @@
 # pip packages
 tabulate
-yt-dlp
+mutagen
 PILLOW
 ytmusicapi
-GitPython
 
-## FFmpeg - Source code
-# https://ffmpeg.org/download.html#get-sources
+## FFmpeg - download binary
+# https://ffmpeg.org/download.html
 
-## YouTube.com "Netscape HTTP Cookie File"
-# https://github.com/ytdl-org/youtube-dl/blob/master/README.md#how-do-i-pass-cookies-to-youtube-dl
+## yt-dlp - download binary
+# https://github.com/yt-dlp/yt-dlp/releases/latest
