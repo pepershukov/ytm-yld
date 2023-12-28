@@ -1,6 +1,5 @@
 import datetime
 import os
-import sys
 import json
 import codecs
 import configparser
@@ -154,13 +153,6 @@ logging.debug("Setting [no-cover] variable...")
 no_cover = (str(config['no-cover']).lower() if config['no-cover'].lower() == 'true' else json.loads(config['no-cover'])) if 'no-cover' in config and args.no_cover.split(',') == [''] else args.no_cover.split(',')
 logging.debug("Setting [no-lyrics] variable...")
 no_lyrics = (str(config['no-lyrics']).lower() if config['no-lyrics'].lower() == 'true' else json.loads(config['no-lyrics'])) if 'no-lyrics' in config and args.no_lyrics.split(',') == [''] else args.no_lyrics.split(',')
-
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except:
-        base_path = os.path.abspath(".")
-    return os.path.join(base_path, relative_path)
 
 logging.debug("Setting [main] variable...")
 path_main = os.path.abspath(os.path.dirname(__file__))

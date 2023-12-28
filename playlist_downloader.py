@@ -4,7 +4,6 @@ import mutagen.mp3
 import mutagen.id3
 import glob # working with files + core
 import os
-import subprocess
 import main
 import shutil
 import logging
@@ -143,14 +142,15 @@ def download_songs(downloadurls = None):
         ydl.download(downloadurls)'''
     
     logging.debug("Checking for updates... [yt-dlp]")
-    subprocess.run([path_yt_dlp, '-U'])
+    for stdout in main.execute([path_yt_dlp, '-U']):
+        print(stdout, end='')
     logging.info(f"Downloading {len(ids)} songs...\n[{ids}]")
-    for i in main.execute([path_yt_dlp, '-i', '--write-thumbnail', '--no-warnings', '-x',
+    for stdout in main.execute([path_yt_dlp, '-i', '--write-thumbnail', '--no-warnings', '-x',
                            '--audio-format', 'mp3',
                            '--audio-quality', '0',
                            '--ffmpeg-location', path_ffmpeg,
                            '-f', 'ba*',
                            '-o', '%(id)s',
                            '--', ' '.join(downloadurls)], cwd=main.path_temp):
-        print(i, end='')
+        print(stdout, end='')
     process_songs(len(downloadurls))
