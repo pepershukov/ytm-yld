@@ -1,5 +1,5 @@
 # **YTMusic - 'Your Likes' Downloader**
-## A downloader of your all-time favourite playlist for autonomous listening
+## A downloader of your all-time favourite playlist for offline listening
 
 **YTMusic - 'Your Likes' Downloader** or else **ytm-yld**, is a **command-line/terminal utility** used to either download or parse your favourite songs from YouTube Music.
 ***
