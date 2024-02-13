@@ -14,7 +14,7 @@ import ytmusicapi
 import requests
 import subprocess
 
-version = 'v9.0.0'
+version = 'v9.0.1'
 start = time.perf_counter() # time variable for benchmarking
 
 
