@@ -21,9 +21,9 @@ If you have **Python installed** you can install the dependencies from `requirem
   
 **The latest release and its notes can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
 
-| **OS** | **Download** | **Size** | **SHA216** |
+| **OS** | **Download** | **Size** | **SHA256** |
 |---|---|---|---|
-| Windows | https://github.com/pepershukov/ytm-yld/releases/download/v9.0.1/ytm-yld_win.exe | 11MB (11590006) | A743592C92D9A36589E92FA940737FFAB8D6AFA2D1C2758026B47BCADA1A6FA5 |
+| Windows | https://github.com/pepershukov/ytm-yld/releases/download/v9.0.1/ytm-yld_win.exe | 11MB (11590006) | F5640004B95B217B8FDC39BBAF3B8BEED0892D04942ABB58C0C02D0AF19DC6C2 |
 
 &nbsp;
 
