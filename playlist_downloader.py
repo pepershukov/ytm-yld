@@ -8,7 +8,6 @@ import main
 import shutil
 import logging
 import ytmusicapi
-# import yt_dlp
 
 
 def process_songs(max_song_num):
@@ -127,30 +126,17 @@ def download_songs(downloadurls = None):
                 logging.debug(f"Removing [{main.path_temp}]...")
                 shutil.rmtree(main.path_temp, ignore_errors=True)
                 return
-
-    '''with yt_dlp.YoutubeDL({
-        'format': 'ba*',
-        'extract_audio': True,
-        'audio_format': 'mp3',
-        'ignoreerrors': True,
-        'nowarnings': True,
-        'writethumbnail': True,
-        'ffmpeg_location': main.path_ffmpeg,
-        'outtmpl': '%(id)s',
-        'postprocessors': [{'key': 'FFmpegExtractAudio',
-                            'preferredcodec': 'mp3'}]}) as ydl:
-        ydl.download(downloadurls)'''
     
     logging.debug("Checking for updates... [yt-dlp]")
     for stdout in main.execute([path_yt_dlp, '-U']):
         print(stdout, end='')
-    logging.info(f"Downloading {len(ids)} songs...\n[{ids}]")
+    logging.info(f"Downloading {len(ids)} songs...\n{ids}")
     for stdout in main.execute([path_yt_dlp, '-i', '--write-thumbnail', '--no-warnings', '-x',
                            '--audio-format', 'mp3',
                            '--audio-quality', '0',
                            '--ffmpeg-location', path_ffmpeg,
                            '-f', 'ba*',
                            '-o', '%(id)s',
-                           '--', ' '.join(downloadurls)], cwd=main.path_temp):
+                           '--', *downloadurls], cwd=main.path_temp):
         print(stdout, end='')
     process_songs(len(downloadurls))

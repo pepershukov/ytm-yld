@@ -4,30 +4,32 @@
 **YTMusic - 'Your Likes' Downloader** or else **ytm-yld**, is a **command-line/terminal utility** used to either download or parse your favourite songs from YouTube Music.
 ***
 **Features:**
-- Downloading of a whole playlist
+- Downloading the whole playlist
 - Downloading newly liked songs
 - Deleting songs that have been unliked
 - Downloading playlist metadata as a JSON file
 - Export songs titles/artists/albums into a txt files
 - Downloading only the songs that you want
-- Downloading lyrics for songs
-- Excluding certain elements of song data from saving, e.g album covers
+- Excluding certain elements of song data from saving, e.g album art
 
 Instructions per version may differ, so **if you are looking for instructions on previous versions, look into a specific version tag or commit accordingly.**
 
 &nbsp;
 
 ## Download
+If you have **Python installed** you can install the dependencies from `requirements.txt` and run `main.py`, with the same directory tree. _([9.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v9.0.0))_
   
 **The latest release and its notes can be found [here](https://github.com/pepershukov/ytm-yld/releases/latest).**
 
 | **OS** | **Download** | **Size** | **SHA216** |
 |---|---|---|---|
-| Windows | https://github.com/pepershukov/ytm-yld/releases/download/v9.0.0/ytm-yld_win.exe | 11MB (11516476) | E09753E8CD965943F5C1F4DB8D9E1966F027FF6CBD792CFB1BBB7EB1D29CE580 |
+| Windows | https://github.com/pepershukov/ytm-yld/releases/download/v9.0.1/ytm-yld_win.exe | 11MB (11590006) | A743592C92D9A36589E92FA940737FFAB8D6AFA2D1C2758026B47BCADA1A6FA5 |
 
 &nbsp;
 
 ## Requirements
+**Windows 8+ x64**
+
 The requirements download are listed in the [`requirements.txt`](https://github.com/pepershukov/ytm-yld/blob/main/requirements.txt) in addition to Python pip packages needed with this project.
 
 ### Software requirements
@@ -36,10 +38,6 @@ They are **only necessary if you are to download music**. For other parts of the
 - **[yt-dlp](https://github.com/yt-dlp/yt-dlp/releases/latest)** binary
 
 ***YouTube.com*** cookie is not needed anymore as `ytmusicapi` handles OAuth. _([9.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v9.0.0))_
-
-### Hardware minimum requirements
-- **Operating System** - Windows 8+
-- **Architecture** - x86_64
 
 &nbsp;
 
@@ -77,7 +75,7 @@ Music options:
 
 If you choose not to pass the arguments, you will have to enter the paths upon the application input request.
 
-_([1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ **If the paths turn out to be invalid or non-existant, or the file formatting is wrong, ~the application will throw out an error~** _([6.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v6.0.0))_ **the application will ask for them recursively until success.**
+_([1.1.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v1.1.0))_ **If the paths turn out to be invalid or non-existant, ~the application will throw out an error~** _([6.0.0+](https://github.com/pepershukov/ytm-yld/releases/tag/v6.0.0))_ **the application will ask for them recursively until success.**
 
 &nbsp;
 
