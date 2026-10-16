@@ -50,14 +50,14 @@ def exit_handler(signal=None, frame=None):
         shutil.rmtree(path_temp, ignore_errors=True)
     except:
         pass
-    
+
     if 'j' not in mode:
         logging.debug(f"Removing [{path_json}]...")
         try:
             os.remove(path_json)
         except:
             pass
-    
+
     logging.info(f'Execution time: {time.perf_counter() - start} seconds')
     os._exit(0)
 signal.signal(signal.SIGINT, exit_handler) # start exit_handler
@@ -66,13 +66,13 @@ def execute(cmd, **kwargs):
     cwd = kwargs['cwd'] if 'cwd' in kwargs else None
     popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True, cwd=cwd)
     for stdout_line in iter(popen.stdout.readline, ""):
-        yield stdout_line 
+        yield stdout_line
     popen.stdout.close()
     return_code = popen.wait()
     if return_code:
         raise subprocess.CalledProcessError(return_code, cmd)
 
-# Logging + custom input 
+# Logging + custom input
 if __name__ == '__main__':
     # remove temp log file
     try:
@@ -213,7 +213,7 @@ if __name__ == '__main__':
         else:
             logging.error(f"No mode chosen. Please select from [t|d|s|m|j].")
         mode = loginput('playlist-to-text/donwload/sync/manual/json? [t|d|s|m|j]')
-    
+
     if not json_arg:
         logging.info('Logging in...')
         if not path_headers:
@@ -267,7 +267,7 @@ if __name__ == '__main__':
     if 'j' in mode:
         logging.info(f"Your playlist metadata as a JSON formatted file is available in [{path_json}].")
     if 't' in mode:
-        logging.info(f"Your parsed playlist information is available in [{path_song}/songs.txt].")       
+        logging.info(f"Your parsed playlist information is available in [{path_song}/songs.txt].")
     if songs_data: # check if there are liked songs
         if 's' in mode:
             logging.info(f"Your songs have been synchronised in [{path_song}].")
