@@ -134,6 +134,7 @@ def download_songs(downloadurls = None):
     for stdout in main.execute([path_yt_dlp, '-i', '--write-thumbnail', '--no-warnings', '-x',
                            '--audio-format', 'mp3',
                            '--audio-quality', '0',
+                           '-t', 'sleep',
                            '--ffmpeg-location', path_ffmpeg,
                            '-f', 'ba*',
                            '-o', '%(id)s',
