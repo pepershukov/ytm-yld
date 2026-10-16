@@ -96,7 +96,7 @@ def download_songs(downloadurls = None):
 
     path_yt_dlp = main.path_yt_dlp
     logging.debug("Validating [yt-dlp] variable...")
-    while not os.path.isfile(main.path_yt_dlp):
+    while not os.path.isfile(path_yt_dlp):
         logging.error("Absent, invalid or non-existant [yt-dlp] bin.")
         path_yt_dlp = main.loginput('Enter the absolute path to a yt-dlp bin file')
     
