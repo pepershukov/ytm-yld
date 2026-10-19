@@ -1,1 +1,6 @@
 \.vscode
+.venv
+__pycache__
+yt-dlp
+headers.json
+config.ini

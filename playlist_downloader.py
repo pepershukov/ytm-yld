@@ -76,7 +76,7 @@ def process_songs(max_song_num):
             pass
         logging.debug('Moving song...')
         os.rename(full_mp3_file, f"{main.path_song}/{song_id}.mp3")
-    
+
     logging.debug(f"Removing [{main.path_temp}]...")
     shutil.rmtree(main.path_temp, ignore_errors=True)
     logging.info("Finished [playlist_downloader]")
@@ -96,16 +96,16 @@ def download_songs(downloadurls = None):
 
     path_yt_dlp = main.path_yt_dlp
     logging.debug("Validating [yt-dlp] variable...")
-    while not os.path.isfile(main.path_yt_dlp):
+    while not os.path.isfile(path_yt_dlp):
         logging.error("Absent, invalid or non-existant [yt-dlp] bin.")
         path_yt_dlp = main.loginput('Enter the absolute path to a yt-dlp bin file')
-    
+
     # cleaning the temporary files if present
     logging.debug(f"Removing [{main.path_temp}]...")
     shutil.rmtree(main.path_temp, ignore_errors=True)
     logging.debug(f"Making [{main.path_temp}]...")
     os.makedirs(main.path_temp, exist_ok=True) # download folder
-            
+
     # Downloader
     if not downloadurls:
         if not glob.glob(f"{main.path_song}/*.mp3"): # if no songs are present locally
@@ -126,7 +126,7 @@ def download_songs(downloadurls = None):
                 logging.debug(f"Removing [{main.path_temp}]...")
                 shutil.rmtree(main.path_temp, ignore_errors=True)
                 return
-    
+
     logging.debug("Checking for updates... [yt-dlp]")
     for stdout in main.execute([path_yt_dlp, '-U']):
         print(stdout, end='')
@@ -134,6 +134,7 @@ def download_songs(downloadurls = None):
     for stdout in main.execute([path_yt_dlp, '-i', '--write-thumbnail', '--no-warnings', '-x',
                            '--audio-format', 'mp3',
                            '--audio-quality', '0',
+                           '-t', 'sleep',
                            '--ffmpeg-location', path_ffmpeg,
                            '-f', 'ba*',
                            '-o', '%(id)s',
